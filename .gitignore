@@ -1,0 +1,17 @@
+# Unity
+*.pidb
+*.suo
+*.userprefs
+*.vsmdi
+*.testsettings
+*/bin
+*/obj
+*/publish
+*/Library
+*/Builds
+*/etc
+*/Packages
+$tf
+TestResults
+!*.sln
+!*.csproj

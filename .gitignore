@@ -5,6 +5,13 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+Build/
+Builds/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
 Assets/AssetStoreTools*
 
 # ===================================== #

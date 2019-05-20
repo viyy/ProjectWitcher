@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,11 +23,7 @@ public class MovementController : MonoBehaviour
 
     [SerializeField] private float gravity = -9.81f;
     
-    private bool _isGrounded = false;
-
     private bool _isRunning = false;
-
-    private float _rotate;
     
     //Mock for unit data model
     private Unit unit = new Unit();
@@ -41,14 +38,14 @@ public class MovementController : MonoBehaviour
     {
         _isRunning = Input.GetKey(runButton) && unit.CanRun;
         
-        // Mock for Stamina Drain
-        unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
-        
         var x = 0f;
    
         // check to see if the W or S key is being pressed.  
         var z = Input.GetAxis("Vertical") * (_isRunning ? runSpeed : speed);
    
+        if (Math.Abs(z) > float.Epsilon)    
+            // Mock for Stamina Drain
+            unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
         // Move the character forwards or backwards
         _controller.SimpleMove(transform.forward * z); 
            

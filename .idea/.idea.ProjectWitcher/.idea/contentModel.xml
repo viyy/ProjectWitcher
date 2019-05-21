@@ -9,6 +9,7 @@
         <e p="Scripts" t="Include">
           <e p="CharacterScripts" t="Include">
             <e p="MovementController.cs" t="Include" />
+            <e p="OrbitCamera.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
           </e>
           <e p="Test-Check" t="Include">

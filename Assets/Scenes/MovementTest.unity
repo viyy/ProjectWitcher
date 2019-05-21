@@ -573,7 +573,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1769422354}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.22579098, y: 2.1, z: -18.4}
+  m_LocalPosition: {x: 0, y: 1, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1129409734}
@@ -593,9 +593,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0259ec3c11205d6488df6c6c01a0f717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Camera: {fileID: 1826336847}
   speed: 5
   runSpeed: 10
-  rotateSpeed: 60
+  rotateSpeed: 15
   mouseSensivity: 4
   runButton: 304
   walkStaminaDrain: 0.1
@@ -630,6 +631,7 @@ GameObject:
   - component: {fileID: 1826336847}
   - component: {fileID: 1826336849}
   - component: {fileID: 1826336848}
+  - component: {fileID: 1826336850}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -645,7 +647,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826336846}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalPosition: {x: 0, y: 0.5, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1769422358}
@@ -702,3 +704,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1826336850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826336846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b2c2c618c293641ae550d0a36d9070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 1769422358}
+  CameraMinDistance: 5
+  CameraMaxDistance: 15
+  CameraZoomSpeed: 300

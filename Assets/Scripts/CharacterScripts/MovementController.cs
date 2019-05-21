@@ -44,20 +44,6 @@ public class MovementController : MonoBehaviour
         //Нулевой вектор.
         Movement = Vector3.zero;
 
-        //Флаг бега персонажа
-        _isRunning = Input.GetKey(runButton) && unit.CanRun;
-
-        // Check to see if the A or S key are being pressed
-        var x = Input.GetAxis("Horizontal");
-
-        // Check to see if the W or S key is being pressed.  
-        var z = Input.GetAxis("Vertical") * (_isRunning ? runSpeed : speed);
-        
-        if (Math.Abs(z) > float.Epsilon)    
-            // Mock for Stamina Drain
-            unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
-        
-
         _isRunning = Input.GetKey(runButton) && unit.CanRun;
         
         var x = 0f;
@@ -71,7 +57,7 @@ public class MovementController : MonoBehaviour
         // Move the character forwards or backwards
         _controller.SimpleMove(transform.forward * z); 
            
-        // Check to see if the A or S key are being pressed
+        // Check to see if the A or D key are being pressed
         x = Input.GetAxis("Horizontal");
 
    
@@ -111,14 +97,10 @@ public class MovementController : MonoBehaviour
             
             //Вращаем персонажа
             transform.rotation = Quaternion.Lerp(transform.rotation, Direction, rotateSpeed * Time.deltaTime);
-        }
-
-        //Если на персонаж на поверхности, то имитируем силу тяжести.
-
- 
+        }   
         // rotate the character based on the x value
-        transform.Rotate(0, x*rotateSpeed*Time.deltaTime, 0);
-
+        //transform.Rotate(0, x*rotateSpeed*Time.deltaTime, 0);
+        //Если на персонаж на поверхности, то имитируем силу тяжести.
         if (!_controller.isGrounded)
         {
             _controller.SimpleMove(_controller.velocity +  Vector3.down*gravity * Time.deltaTime);
@@ -126,7 +108,7 @@ public class MovementController : MonoBehaviour
 
 
         //Двигаем персонажа
-        _controller.Move(Movement * Time.deltaTime);
+        //_controller.Move(Movement * Time.deltaTime);
 
     }
 }

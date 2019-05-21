@@ -6,16 +6,15 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     private CharacterController _controller;
-
+    
     //Камера игрока
     [SerializeField] private Transform Camera;
-
     [SerializeField] private float speed = 5f;
 
     [SerializeField] private float runSpeed = 10f;
-
+    
     [SerializeField] private float rotateSpeed = 15f;
-
+    
     [SerializeField] private float mouseSensivity = 4f;
     
     [SerializeField] private KeyCode runButton = KeyCode.LeftShift;
@@ -31,9 +30,9 @@ public class MovementController : MonoBehaviour
     //Mock for unit data model
     private Unit unit = new Unit();
 
+
     //Вектор движения персонажа.
     private Vector3 Movement = Vector3.zero;
-
     void Start()
     {
        _controller =  gameObject.GetComponent<CharacterController>();
@@ -41,6 +40,7 @@ public class MovementController : MonoBehaviour
 
     void Update()
     {
+
         //Нулевой вектор.
         Movement = Vector3.zero;
 
@@ -57,12 +57,32 @@ public class MovementController : MonoBehaviour
             // Mock for Stamina Drain
             unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
         
+
+        _isRunning = Input.GetKey(runButton) && unit.CanRun;
+        
+        var x = 0f;
+   
+        // check to see if the W or S key is being pressed.  
+        var z = Input.GetAxis("Vertical") * (_isRunning ? runSpeed : speed);
+   
+        if (Math.Abs(z) > float.Epsilon)    
+            // Mock for Stamina Drain
+            unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
+        // Move the character forwards or backwards
+        _controller.SimpleMove(transform.forward * z); 
+           
+        // Check to see if the A or S key are being pressed
+        x = Input.GetAxis("Horizontal");
+
+   
+
         // Check to see if the right mouse button is pressed
         if (Input.GetMouseButton(1))
         {
             // Get the difference in horizontal mouse movement
             x = Input.GetAxis("Mouse X") * mouseSensivity;
         }
+
 
         //Если были нажаты клавиши то:
         if (z != 0 || x != 0)
@@ -94,12 +114,19 @@ public class MovementController : MonoBehaviour
         }
 
         //Если на персонаж на поверхности, то имитируем силу тяжести.
+
+ 
+        // rotate the character based on the x value
+        transform.Rotate(0, x*rotateSpeed*Time.deltaTime, 0);
+
         if (!_controller.isGrounded)
         {
             _controller.SimpleMove(_controller.velocity +  Vector3.down*gravity * Time.deltaTime);
         }
 
+
         //Двигаем персонажа
         _controller.Move(Movement * Time.deltaTime);
+
     }
 }

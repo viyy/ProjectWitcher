@@ -9,6 +9,9 @@ public class MovementController : MonoBehaviour
     
     //Камера игрока
     [SerializeField] private Transform Camera;
+
+    [SerializeField] private float jumpSpeed = 8.0f;
+
     [SerializeField] private float speed = 5f;
 
     [SerializeField] private float runSpeed = 10f;
@@ -106,9 +109,33 @@ public class MovementController : MonoBehaviour
             _controller.SimpleMove(_controller.velocity +  Vector3.down*gravity * Time.deltaTime);
         }
 
+        jump();
 
         //Двигаем персонажа
         //_controller.Move(Movement * Time.deltaTime);
 
     }
+
+    #region Прыжок
+
+    private Vector3 moveDirection = Vector3.zero;
+
+    void jump()
+    {
+        if (_controller.isGrounded)
+        {
+            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+
+            if (Input.GetButton("Jump"))
+            {
+                moveDirection.y = jumpSpeed;
+            }
+        }
+
+        moveDirection.y += gravity * Time.deltaTime;
+
+        // Move the controller
+        _controller.Move(moveDirection * Time.deltaTime);
+    }
+    #endregion
 }

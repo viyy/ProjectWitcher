@@ -17,15 +17,38 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/MovementController.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="25" column="36" lean-forward="true" selection-start-line="25" selection-start-column="36" selection-end-line="25" selection-end-column="36" />
+            <state relative-caret-position="546">
+              <caret line="77" column="27" selection-start-line="77" selection-start-column="27" selection-end-line="77" selection-end-column="27" />
               <folding>
-                <marker date="1558364399136" expanded="true" signature="6:92" ph="..." />
-                <marker date="1558364399136" expanded="true" signature="141:2039" ph="{...}" />
-                <marker date="1558364399136" expanded="true" signature="785:867" ph="{...}" />
-                <marker date="1558364399136" expanded="true" signature="886:2037" ph="{...}" />
-                <marker date="1558364399136" expanded="true" signature="1615:1757" ph="{...}" />
-                <marker date="1558364399136" expanded="true" signature="1912:2031" ph="{...}" />
+                <marker date="1558465074432" expanded="false" signature="6:92" ph="..." />
+                <marker date="1558465074432" expanded="true" signature="141:3681" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="938:1020" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="1039:3679" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="1830:1972" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="2043:3241" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="3253:3431" ph="/* rotate the character based on the x value ... */" />
+                <marker date="1558465074432" expanded="true" signature="3468:3587" ph="{...}" />
+                <marker date="1558465074432" expanded="true" signature="3598:3672" ph="/* Двигаем персонажа ... */" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/OrbitCamera.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="880">
+              <caret line="57" column="54" lean-forward="true" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
+              <folding>
+                <marker date="1558464011560" expanded="false" signature="6:78" ph="..." />
+                <marker date="1558464011560" expanded="true" signature="120:2785" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="732:966" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="993:2783" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="1304:1567" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="1631:1856" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="1654:1795" ph="/* Угол поворота камеры по оси Y равен направлению поворота (1\-1) умноженному на скорость вращения ... */" />
+                <marker date="1558464011560" expanded="true" signature="1959:2397" ph="{...}" />
+                <marker date="1558464011560" expanded="true" signature="1982:2140" ph="/* Угол поворота камеры по оси Y равен направлению поворота (1\-1) умноженному на скорость вращения и на 3 ... */" />
               </folding>
             </state>
           </provider>
@@ -53,13 +76,14 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/MovementController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Unit.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/OrbitCamera.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Unit.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/MovementController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/RigidBodyMovementController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/CharacterScripts/MovementController.cs" />
       </list>
     </option>
   </component>
@@ -75,8 +99,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AssemblyExplorer" />
-      <pane id="FileSystemExplorer" />
       <pane id="UnityExplorer">
         <option name="show-hidden-items" value="false" />
         <option name="show-project-names" value="true" />
@@ -84,6 +106,8 @@
       <pane id="SolutionExplorer">
         <option name="show-all-files" value="false" />
       </pane>
+      <pane id="AssemblyExplorer" />
+      <pane id="FileSystemExplorer" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -131,11 +155,12 @@
       <updated>1558346865637</updated>
       <workItem from="1558346879088" duration="5957000" />
       <workItem from="1558364172029" duration="870000" />
+      <workItem from="1558464260266" duration="920000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6827000" />
+    <option name="totallyTimeSpent" value="7747000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -149,7 +174,7 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25266525" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -195,6 +220,7 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/RigidBodyMovementController.cs" />
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/Unit.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
@@ -207,24 +233,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/RigidBodyMovementController.cs">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/OrbitCamera.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="706">
-          <caret line="62" column="55" selection-start-line="62" selection-start-column="55" selection-end-line="62" selection-end-column="55" />
+        <state relative-caret-position="880">
+          <caret line="57" column="54" lean-forward="true" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
+          <folding>
+            <marker date="1558464011560" expanded="false" signature="6:78" ph="..." />
+            <marker date="1558464011560" expanded="true" signature="120:2785" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="732:966" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="993:2783" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="1304:1567" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="1631:1856" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="1654:1795" ph="/* Угол поворота камеры по оси Y равен направлению поворота (1\-1) умноженному на скорость вращения ... */" />
+            <marker date="1558464011560" expanded="true" signature="1959:2397" ph="{...}" />
+            <marker date="1558464011560" expanded="true" signature="1982:2140" ph="/* Угол поворота камеры по оси Y равен направлению поворота (1\-1) умноженному на скорость вращения и на 3 ... */" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/CharacterScripts/MovementController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="25" column="36" lean-forward="true" selection-start-line="25" selection-start-column="36" selection-end-line="25" selection-end-column="36" />
+        <state relative-caret-position="546">
+          <caret line="77" column="27" selection-start-line="77" selection-start-column="27" selection-end-line="77" selection-end-column="27" />
           <folding>
-            <marker date="1558364399136" expanded="true" signature="6:92" ph="..." />
-            <marker date="1558364399136" expanded="true" signature="141:2039" ph="{...}" />
-            <marker date="1558364399136" expanded="true" signature="785:867" ph="{...}" />
-            <marker date="1558364399136" expanded="true" signature="886:2037" ph="{...}" />
-            <marker date="1558364399136" expanded="true" signature="1615:1757" ph="{...}" />
-            <marker date="1558364399136" expanded="true" signature="1912:2031" ph="{...}" />
+            <marker date="1558465074432" expanded="false" signature="6:92" ph="..." />
+            <marker date="1558465074432" expanded="true" signature="141:3681" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="938:1020" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="1039:3679" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="1830:1972" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="2043:3241" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="3253:3431" ph="/* rotate the character based on the x value ... */" />
+            <marker date="1558465074432" expanded="true" signature="3468:3587" ph="{...}" />
+            <marker date="1558465074432" expanded="true" signature="3598:3672" ph="/* Двигаем персонажа ... */" />
           </folding>
         </state>
       </provider>

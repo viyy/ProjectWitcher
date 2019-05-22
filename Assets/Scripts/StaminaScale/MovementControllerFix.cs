@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class MovementControllerFix : MonoBehaviour
 {
     private CharacterController _controller;
     private StaminaUsing _staminaStatus;// для UI шкалы

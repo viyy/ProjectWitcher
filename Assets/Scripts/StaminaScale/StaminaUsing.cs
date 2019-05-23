@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 public class StaminaUsing : MonoBehaviour
 {
     [SerializeField] private CharacterStats _charStats;
     [SerializeField] private Image _image;
-    [SerializeField] private MovementControllerFix _moveStatus;
+    [SerializeField] private MovementController _moveStatus;
     [SerializeField] private float _staminaPercent;
     [SerializeField] private float _staminaConst =100;
     private float _staminaRunCoast = 0.5f;
@@ -19,20 +17,17 @@ public class StaminaUsing : MonoBehaviour
     public bool _isJumping = false;
     public bool _isRegeneration = false;
     public bool _isStanding = true;
-   
-
-    // Start is called before the first frame update
+  
     void Awake()
     {
         _charStats = gameObject.GetComponent<CharacterStats>(); 
         _image = GetComponent<Image>();
-        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementControllerFix>(); // кэш MovementController, поиск по тегу Player
+        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementController>(); // кэш MovementController, поиск по тегу Player
         _MaxStamina = _charStats._MaxStamina;
         _stamina = _MaxStamina;
        
     }
 
-    // Update is called once per frame
     void Update()
     {
 

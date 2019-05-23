@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class MovementControllerFixed : MonoBehaviour
 {
     private CharacterController _controller;
     
@@ -19,13 +19,12 @@ public class MovementController : MonoBehaviour
     
     [SerializeField] private KeyCode runButton = KeyCode.LeftShift;
 
-    [SerializeField] private float walkStaminaDrain = 0.1f;
-
-    [SerializeField] private float runStaminaDrain = 0.3f;
-
     [SerializeField] private float gravity = -9.81f;
     
     private bool _isRunning = false;
+    private bool _isGrounded = false;
+    private bool _isStanding = true;
+
     
     //Mock for unit data model
     private Unit unit = new Unit();
@@ -44,16 +43,19 @@ public class MovementController : MonoBehaviour
         //Нулевой вектор.
         Movement = Vector3.zero;
 
-        _isRunning = Input.GetKey(runButton) && unit.CanRun;
+        _isRunning = Input.GetKey(runButton) && unit.StaminaChekForRun();
         
         var x = 0f;
    
         // check to see if the W or S key is being pressed.  
         var z = Input.GetAxis("Vertical") * (_isRunning ? runSpeed : speed);
    
-        if (Math.Abs(z) > float.Epsilon)    
+        if (Math.Abs(z) > float.Epsilon)
             // Mock for Stamina Drain
-            unit.DrainStamina(_isRunning ? runStaminaDrain: walkStaminaDrain);
+            if (_isRunning)
+            {
+                unit.DrainStamina();
+            }  
         // Move the character forwards or backwards
         _controller.SimpleMove(transform.forward * z); 
            
@@ -109,6 +111,23 @@ public class MovementController : MonoBehaviour
 
         //Двигаем персонажа
         //_controller.Move(Movement * Time.deltaTime);
+    }
 
+    //Проверка персонажа на Прыжок
+    public bool JumpCheck()
+    {
+        return !_controller.isGrounded;
+    }
+
+    //Проверка персонажа на Бег
+    public bool RunCheck()
+    {
+        return _isRunning;
+    }
+
+    //Проверка персонажа на Стояние на месте
+    public bool StandCheck()
+    {
+        return _isStanding;
     }
 }

@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    private CharacterController _controller;
+    protected CharacterController _controller;
     
     //Камера игрока
     [SerializeField] private Transform Camera;
 
-    [SerializeField] private float speed = 5f;
+    [SerializeField] protected float jumpSpeed = 8.0f;
+
+    [SerializeField] protected float speed = 5f;
 
     [SerializeField] private float runSpeed = 10f;
     
@@ -20,7 +22,11 @@ public class MovementController : MonoBehaviour
     
     [SerializeField] private KeyCode runButton = KeyCode.LeftShift;
 
-    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float walkStaminaDrain = 0.1f;
+
+    [SerializeField] private float runStaminaDrain = 0.3f;
+
+    [SerializeField] protected float gravity = -9.81f;
     
     private bool _isRunning = false;
     private bool _isGrounded = false;

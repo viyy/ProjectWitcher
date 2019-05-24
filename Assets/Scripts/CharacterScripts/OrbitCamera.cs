@@ -26,6 +26,8 @@ public class OrbitCamera : MonoBehaviour
 
     void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player");
+
         //Присваимем переменной угол по оси y;
         RotationY = transform.eulerAngles.y;
 

@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 1769422360}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -598,8 +598,6 @@ MonoBehaviour:
   rotateSpeed: 15
   mouseSensivity: 4
   runButton: 304
-  walkStaminaDrain: 0.1
-  runStaminaDrain: 0.3
   gravity: -9.81
 --- !u!143 &1769422360
 CharacterController:
@@ -719,3 +717,5 @@ MonoBehaviour:
   CameraMinDistance: 5
   CameraMaxDistance: 15
   CameraZoomSpeed: 300
+  AxisX_MouseSensivity: 3
+  AxisY_MouseSensivity: 3

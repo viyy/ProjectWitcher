@@ -63,7 +63,7 @@ public class MovementController : MonoBehaviour
             CharacterMovement(Movement, x, z);
         }
 
-        //Если персонаж стоит на поверхности, то имитируем силу тяжести.
+        //Если персонаж находится в воздухе, то имитируем силу тяжести.
         if (!_controller.isGrounded)
         {
             _controller.SimpleMove(_controller.velocity + Vector3.down * gravity * Time.deltaTime);

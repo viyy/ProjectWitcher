@@ -3,54 +3,7 @@ using UnityEngine.UI;
 
 public class Unit: MonoBehaviour
 {
-    //Использование стамины
-    public void DrainStamina()
-    {
-        StaminaSpendingForRun();
-    }
-
-    private void Awake()
-    {
-        //Awake Скрипта Стамины
-        #region StaminaAwake
-        _charStats = FindObjectOfType<CharacterStats>();
-        _image = GetComponent<Image>();
-        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementController>(); // кэш MovementController, поиск по тегу Player
-        _MaxStamina = _charStats._MaxStamina;
-        _stamina = _MaxStamina;
-        #endregion
-    }
-
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        //Update Скрипта Стамины
-        #region Stamina Update
-        StaminaShow();
-        MovementStatusCheck();
-        StaminaRegeneration();
-
-
-        if (!_isRunning)
-        {
-            _isRegeneration = true;
-        }
-        else
-        {
-            _isRegeneration = false;
-        }
-
-
-        if (_isRunning)
-        {
-            StaminaSpendingForRun();
-        }
-        #endregion
-    }
+    public static Unit InstanceUnit = null;
 
     //Скрипт Стамины
     #region StaminaUsing
@@ -73,7 +26,7 @@ public class Unit: MonoBehaviour
     private void StaminaShow()
     {
         _staminaPercent = _stamina * 0.01f;
-        _image.fillAmount = _staminaPercent;
+        //_image.fillAmount = _staminaPercent;
     }
     private void StaminaSpendingForRun()
     {
@@ -114,4 +67,65 @@ public class Unit: MonoBehaviour
         _isStanding = _moveStatus.StandCheck();   // нужна проверка на Standing в MovementController
     }
     #endregion
+
+    //Использование стамины
+    public void DrainStamina()
+    {
+        StaminaSpendingForRun();
+    }
+
+    private void Awake()
+    {
+        //Ссылка на Instance
+        #region Instance
+        if (InstanceUnit != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            InstanceUnit = this;
+        }
+        #endregion
+
+        //Awake Скрипта Стамины
+        #region StaminaAwake
+        _charStats = FindObjectOfType<CharacterStats>();
+        _image = GetComponent<Image>();
+        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementController>(); // кэш MovementController, поиск по тегу Player
+        _MaxStamina = _charStats._MaxStamina;
+        _stamina = _MaxStamina;
+        #endregion
+    }
+
+    private void Start()
+    {
+        
+    }
+
+    private void Update()
+    {
+        //Update Скрипта Стамины
+        #region Stamina Update
+        StaminaShow();
+        MovementStatusCheck();
+        StaminaRegeneration();
+
+
+        if (!_isRunning)
+        {
+            _isRegeneration = true;
+        }
+        else
+        {
+            _isRegeneration = false;
+        }
+
+
+        if (_isRunning)
+        {
+            StaminaSpendingForRun();
+        }
+        #endregion
+    }
 }

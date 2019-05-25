@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class OrbitCamera : MonoBehaviour
 {
@@ -47,6 +45,8 @@ public class OrbitCamera : MonoBehaviour
 
     void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player");
+
         //Вычисляем стартовое положение камеры.
         StartCameraDistance = Player.transform.position + (-Player.transform.forward * (CameraMinDistance + CameraMaxDistance / 2));
 

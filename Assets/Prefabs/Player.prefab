@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 2404166039880781104}
   - component: {fileID: 2404166039880781107}
   - component: {fileID: 2404166039880781106}
-  - component: {fileID: 2404166039880781109}
-  - component: {fileID: 2404166039880781119}
+  - component: {fileID: -2700074906276301191}
   - component: {fileID: 2404166039880781105}
   - component: {fileID: 2404166039880781118}
+  - component: {fileID: -6849408733783493144}
   m_Layer: 8
-  m_Name: Capsule
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,7 +82,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &2404166039880781109
+--- !u!136 &-2700074906276301191
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,28 +96,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2404166039880781119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2404166039880781108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e683d4fd4b9a0e4e938df07580a55f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Camera: {fileID: 0}
-  jumpSpeed: 10.34
-  speed: 5
-  runSpeed: 10
-  rotateSpeed: 15
-  mouseSensivity: 4
-  runButton: 304
-  walkStaminaDrain: 0.1
-  runStaminaDrain: 0.3
-  gravity: -9.81
 --- !u!114 &2404166039880781105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,13 +108,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0259ec3c11205d6488df6c6c01a0f717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 0}
-  jumpSpeed: 8
+  mainCamera: {fileID: 0}
   speed: 5
   runSpeed: 10
-  rotateSpeed: 15
-  mouseSensivity: 4
+  RotateSpeed: 15
+  AimRotateSpeed: 20
   runButton: 304
+  AimButton: 325
   walkStaminaDrain: 0.1
   runStaminaDrain: 0.3
   gravity: -9.81
@@ -158,6 +136,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-6849408733783493144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2404166039880781108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e683d4fd4b9a0e4e938df07580a55f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpSpeed: 8
 --- !u!1 &2404166040582922211
 GameObject:
   m_ObjectHideFlags: 0

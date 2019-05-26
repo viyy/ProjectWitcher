@@ -5,9 +5,13 @@ public class OrbitCamera : MonoBehaviour
     //Сериализованное поле для ссылки на игрока.
     [SerializeField] private GameObject Player;
 
+    [SerializeField] private float CameraObstacleDistance = 1.0f;
+
     [SerializeField] private float CameraMinDistance = 5.0f;
 
     [SerializeField] private float CameraMaxDistance = 15f;
+
+    [SerializeField] private float DistanceFromObstacle = 0.25f;
 
     [SerializeField] private float CameraZoomSpeed = 300f;
 
@@ -90,16 +94,25 @@ public class OrbitCamera : MonoBehaviour
             case true:
 
                 transform.position = Vector3.Lerp(transform.position, ObstacleOffset, CameraObstacleAvoidSpeed * Time.deltaTime);
+                //Управляем зумом
+                //if(ObstacleOffset.z > CameraObstacleDistance)
+                //{
+                //    CameraZoom(CameraObstacle, CameraObstacleDistance, ObstacleOffset.z);
+                //}
                 break;
 
             case false:
 
                 transform.position = Vector3.Lerp(transform.position, Player.transform.position - (Rotation * Offset), CameraReturnSpeed * Time.deltaTime);
-                
+
                 //Управляем зумом
-                CameraZoom(CameraMinDistance, CameraMaxDistance);
+                //CameraZoom(CameraObstacle, CameraMinDistance, CameraMaxDistance);
+                SetZoom(Offset, CameraMinDistance, CameraMaxDistance);
+
                 break;
         }
+
+        SetZoom(Offset, CameraMinDistance, CameraMaxDistance);
     }
 
     /// <summary>
@@ -118,7 +131,8 @@ public class OrbitCamera : MonoBehaviour
         {
             CameraObstacle = true;
 
-            ObstacleOffset = Ray.point;
+            //Отдялаем новую позицию камеры от препятствия.
+            ObstacleOffset = Ray.point + (rotation * (Ray.transform.forward * DistanceFromObstacle));
 
             Debug.DrawLine(Player.transform.position, ObstacleOffset, Color.red);
 
@@ -133,9 +147,28 @@ public class OrbitCamera : MonoBehaviour
     /// </summary>
     /// <param name="MinDistance">Минимальная дистанция</param>
     /// <param name="MaxDistance">Максимальная дистанция</param>
-    private void CameraZoom(float MinDistance, float MaxDistance)
+    private void CameraZoom(bool Obstacle, float MinDistance, float MaxDistance)
     {
         //Управление зумом камеры.
+        if (Zoom != 0)
+        {
+            //Проверяка препятствия
+            switch (Obstacle)
+            {
+                case true:
+                    SetZoom(ObstacleOffset, MinDistance, MaxDistance);
+                    break;
+
+                case false:
+                    SetZoom(Offset, MinDistance, MaxDistance);
+                    break;
+            }
+
+        }
+    }
+
+    private void SetZoom(Vector3 Offset, float MinDistance, float MaxDistance)
+    {
         if (Zoom != 0)
         {
             Offset.z -= (1 * Input.GetAxis("Mouse ScrollWheel")) * CameraZoomSpeed * Time.deltaTime;

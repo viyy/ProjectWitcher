@@ -18,7 +18,9 @@ namespace Assets.Scripts.BaseScripts
         public PCInputController inputController { get; private set; }
 
         public MovementController movementController { get; private set; }
-        
+
+        public StaminaController staminaController { get; private set; }
+
         private List<BaseController> AllControllers;
 
         #endregion
@@ -35,11 +37,11 @@ namespace Assets.Scripts.BaseScripts
             inputController = new PCInputController(Player.GetComponent<PCInput>());
             cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(), Player.transform, Camera.main);
             movementController = new MovementController(Player.GetComponent<PlayerMovement>(), Player.transform, Player.GetComponent<CharacterController>());
-            
+            staminaController = new StaminaController(ref Player.GetComponent<PlayerCharacteristics>().Stamina, Player.GetComponent<PlayerCharacteristics>(), inputController, movementController);
             
             AllControllers = new List<BaseController>
             {
-                inputController, cameraController, movementController
+                inputController, cameraController, staminaController, movementController
             };
         }
 

@@ -41,10 +41,7 @@ public class OrbitCamera : MonoBehaviour
 
     //Флаг для наличия препятствий
     private bool CameraObstacle;
-
-    //Флаг автодвижения камеры.
-    private bool AutoMove;
-
+    
     //Луч для проверки препятствия перед камерой.
     private RaycastHit Ray;
 

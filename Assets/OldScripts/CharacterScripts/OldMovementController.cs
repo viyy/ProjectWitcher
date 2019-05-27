@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class OldMovementController : MonoBehaviour
 {
     protected CharacterController _controller;
     

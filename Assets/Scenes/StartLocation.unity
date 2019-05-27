@@ -2319,7 +2319,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -2654,10 +2654,10 @@ Terrain:
   serializedVersion: 4
   m_TerrainData: {fileID: 15600000, guid: 79cc661ec1145724e8b4aa4c23ec9996, type: 2}
   m_TreeDistance: 5000
-  m_TreeBillboardDistance: 50
-  m_TreeCrossFadeLength: 5
+  m_TreeBillboardDistance: 500
+  m_TreeCrossFadeLength: 8
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 80
+  m_DetailObjectDistance: 86
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
@@ -2665,7 +2665,7 @@ Terrain:
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
   m_DrawInstanced: 0
-  m_DrawTreesAndFoliage: 1
+  m_DrawTreesAndFoliage: 0
   m_ReflectionProbeUsage: 1
   m_MaterialType: 0
   m_LegacySpecular:
@@ -3793,7 +3793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434979094}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48cb8eaf196c02b429ef95645d4fedc2, type: 3}
   m_Name: 
@@ -14604,6 +14604,29 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1879337404}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1884116052 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2404166039880781108, guid: b9e06dc6986817e49851a595730ebff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 961823310}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1884116060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884116052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ff57860a5c88345894430ca1817e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stamina: 100
+  StaminaMaximum: 100
+  RunStaminaDrain: 0.5
+  StaminaJumpCoast: 30
+  StaminaRegenRate: 0.1
 --- !u!1001 &1902762410
 PrefabInstance:
   m_ObjectHideFlags: 0

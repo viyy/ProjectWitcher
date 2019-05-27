@@ -13,10 +13,6 @@ namespace Assets.Scripts.Models
 
         [SerializeField] public float AimRotateSpeed = 20f;
 
-        [SerializeField] public float WalkStaminaDrain = 0.1f;
-
-        [SerializeField] public float RunStaminaDrain = 0.3f;
-
         [SerializeField] public float Gravity = -9.81f;
 
         [SerializeField] public float JumpHeight = 10f;

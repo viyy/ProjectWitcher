@@ -101,7 +101,7 @@ namespace Assets.Scripts.Controllers
 
             Debug.Log("Standing: "+IsStanding);
 
-            CharacterJump();
+            JumpAndGravity();
 
             //Если были нажаты клавиши то:
             if (!inputController.Aim)
@@ -122,7 +122,7 @@ namespace Assets.Scripts.Controllers
         /// <param name="inputController">Контроллер ввода</param>
         private void GetInputs(PCInputController inputController)
         {
-            IsRunning = inputController.Run;
+            IsRunning = StartScript.GetStartScript.staminaController.CanRun;
 
             // Check to see if the A or D key are being pressed
             X = Input.GetAxis("Horizontal") * (IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
@@ -134,12 +134,12 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// Метод для прыжка персонажа !!! На первое время, потом переделать !!!
         /// </summary>
-        private void CharacterJump()
+        private void JumpAndGravity()
         {
             //Если игрок стоит на поверхности то можем прыгать.
             if (IsGrounded)
             {
-                if (inputController.Jump)
+                if(StartScript.GetStartScript.staminaController.CanJump)
                 {
                     Y = PlayerMovement.JumpHeight;
                 }
@@ -285,8 +285,6 @@ namespace Assets.Scripts.Controllers
             {
                 IsGrounded = RayHit.distance < PlayerMovement.GroundRayDistance;
             }
-
-            Debug.Log("Ground: " +IsGrounded);
         }
     }
 }

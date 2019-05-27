@@ -443,6 +443,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2404166039880781108, guid: b9e06dc6986817e49851a595730ebff8,
+        type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 7351661830673880351, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: JumpSpeed
@@ -451,17 +456,12 @@ PrefabInstance:
     - target: {fileID: 7351661830673880351, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: GroundRayDistance
-      value: 1.1
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4586699115608248593, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: AimButton
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2404166039880781108, guid: b9e06dc6986817e49851a595730ebff8,
-        type: 3}
-      propertyPath: m_Name
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.048
+      value: 2.307
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}

@@ -52,6 +52,7 @@ namespace Assets.Scripts.Controllers
 
             LeftRight = Input.GetAxis("Vertical");
 
+            Debug.Log("Jump pressed: " +Jump);
             Jump = Input.GetKeyDown(PCInputModel.JumpButton);
 
             Run = Input.GetKey(PCInputModel.RunButton);

@@ -105,7 +105,7 @@ namespace Assets.Scripts.Controllers
         /// <param name="RunPress"></param>
         private void RunStaminaDrain(bool RunPress)
         {
-            CanRun = (RunPress & Stamina > 0);
+            CanRun = ((RunPress & movementController.IsGrounded) & Stamina > 0);
 
             if(CanRun)
             {

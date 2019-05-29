@@ -3,24 +3,24 @@ using UnityEngine;
 
 namespace Assets.Scripts.Models
 {
-    public class PlayerMovement:BaseObject
+    public class PlayerMovement
     {
-        [SerializeField] public float Speed = 5f;
+        public float Speed = 5f;
 
-        [SerializeField] public float RunSpeed = 10f;
+        public float RunSpeed = 10f;
 
-        [SerializeField] public float RotateSpeed = 15f;
+        public float RotateSpeed = 15f;
 
-        [SerializeField] public float AimRotateSpeed = 20f;
+        public float AimRotateSpeed = 20f;
 
-        [SerializeField] public float Gravity = -9.81f;
+        public float Gravity = -9.81f;
 
-        [SerializeField] public float JumpHeight = 10f;
+        public float JumpHeight = 10f;
 
-        [SerializeField] public float GroundRayDistance = 1.2f;
+        public float GroundRayDistance = 1.3f;
 
-        [SerializeField] public float MinimumFall = -1.0f;
+        public float MinimumFall = -1.0f;
 
-        [SerializeField] public float TerminalFall = -15.0f;
+        public float TerminalFall = -15.0f;
     }
 }

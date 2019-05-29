@@ -11,6 +11,13 @@ namespace Assets.Scripts.Controllers
 {
     class PCInputController : BaseController
     {
+
+        #region Модель
+
+        public PCInput PCInputModel { get; private set; }
+
+        #endregion
+
         #region Клавиатура
 
         public float ForwardBackward { get; private set; }
@@ -35,15 +42,13 @@ namespace Assets.Scripts.Controllers
 
         #endregion
 
-        public PCInput PCInputModel;
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="PCInputModel">Модель ввода игрока</param>
-        public PCInputController(PCInput PCInputModel)
+        public PCInputController()
         {
-            this.PCInputModel = PCInputModel;
+            PCInputModel = new PCInput();
         }
         
         public override void ControllerUpdate()

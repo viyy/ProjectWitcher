@@ -21,7 +21,7 @@ namespace Assets.Scripts.BaseScripts
 
         public StaminaController staminaController { get; private set; }
 
-        private List<BaseController> AllControllers;
+        private List<BaseController> AllControllers = new List<BaseController>(5);
 
         #endregion
 
@@ -34,15 +34,20 @@ namespace Assets.Scripts.BaseScripts
             GameObject Player = GameObject.FindGameObjectWithTag("Player");
 
             //Создаем контроллеры
-            inputController = new PCInputController(Player.GetComponent<PCInput>());
-            cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(), Player.transform, Camera.main);
-            movementController = new MovementController(Player.GetComponent<PlayerMovement>(), Player.transform, Player.GetComponent<CharacterController>());
+            inputController = new PCInputController();
+            cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(),Player.transform, Camera.main, inputController);
+            movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
             staminaController = new StaminaController(ref Player.GetComponent<PlayerCharacteristics>().Stamina, Player.GetComponent<PlayerCharacteristics>(), inputController, movementController);
-            
-            AllControllers = new List<BaseController>
-            {
-                inputController, cameraController, staminaController, movementController
-            };
+
+
+            #region Добавляем контроллеры в коллекцию
+
+            AllControllers.Add(inputController);
+            AllControllers.Add(cameraController);
+            AllControllers.Add(movementController);
+            AllControllers.Add(staminaController);
+
+            #endregion
         }
 
         private void Update()

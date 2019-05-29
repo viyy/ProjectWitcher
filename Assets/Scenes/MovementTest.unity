@@ -448,6 +448,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: -608622798560952637, guid: b9e06dc6986817e49851a595730ebff8,
+        type: 3}
+      propertyPath: StaminaJumpCoast
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7351661830673880351, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: JumpSpeed
@@ -456,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 7351661830673880351, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: GroundRayDistance
-      value: 2.5
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 4586699115608248593, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -517,6 +522,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2404166039880781118, guid: b9e06dc6986817e49851a595730ebff8,
+        type: 3}
+      propertyPath: m_SkinWidth
+      value: 0.0001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9e06dc6986817e49851a595730ebff8, type: 3}
@@ -714,7 +724,7 @@ GameObject:
   - component: {fileID: 1826336847}
   - component: {fileID: 1826336849}
   - component: {fileID: 1826336848}
-  - component: {fileID: 1826336851}
+  - component: {fileID: 1826336850}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -787,7 +797,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1826336851
+--- !u!114 &1826336850
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

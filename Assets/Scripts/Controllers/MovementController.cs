@@ -11,6 +11,13 @@ namespace Assets.Scripts.Controllers
 {
     class MovementController : BaseController
     {
+        #region Модель
+
+        //Модель передвижения игрока
+        PlayerMovement PlayerMovement;
+
+        #endregion
+
         //Вектор движения персонажа
         private Vector3 Movement;
 
@@ -22,10 +29,7 @@ namespace Assets.Scripts.Controllers
 
         //Ccылка на контроллер ввода
         PCInputController inputController;
-
-        //Модель передвижения игрока
-        PlayerMovement PlayerMovement;
-
+        
         //Контроллер персонажа !!! Временное решение !!!
         protected CharacterController CharacterController;
 
@@ -64,7 +68,7 @@ namespace Assets.Scripts.Controllers
         /// <param name="PlayerMovement">Модель передвижения игрока</param>
         /// <param name="Player">компонент Transform игрока</param>
         /// <param name="CharacterController">Контроллер персонажа</param>
-        public MovementController(PlayerMovement PlayerMovement, Transform Player, CharacterController CharacterController)
+        public MovementController(Transform Player, CharacterController CharacterController)
         {
             //Cоздаем вектор движения
             Movement = new Vector3();
@@ -75,8 +79,8 @@ namespace Assets.Scripts.Controllers
             //Получаем позицию камеры
             Camera = UnityEngine.Camera.main.transform;
 
-            //Получаем модель передвижения игрока
-            this.PlayerMovement = PlayerMovement;
+            //Создаем модель передвижения игрока
+            PlayerMovement = new PlayerMovement();
 
             //Получаем контроллер персонажа
             this.CharacterController = CharacterController;

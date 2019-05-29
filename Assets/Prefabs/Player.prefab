@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2404166039880781107}
   - component: {fileID: 2404166039880781106}
   - component: {fileID: -2700074906276301191}
-  - component: {fileID: 2404166039880781105}
   - component: {fileID: 2404166039880781118}
-  - component: {fileID: -6849408733783493144}
+  - component: {fileID: 4586699115608248593}
+  - component: {fileID: 7351661830673880351}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -96,28 +96,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2404166039880781105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2404166039880781108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0259ec3c11205d6488df6c6c01a0f717, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  speed: 5
-  runSpeed: 10
-  RotateSpeed: 15
-  AimRotateSpeed: 20
-  runButton: 304
-  AimButton: 325
-  walkStaminaDrain: 0.1
-  runStaminaDrain: 0.3
-  gravity: -9.81
 --- !u!143 &2404166039880781118
 CharacterController:
   m_ObjectHideFlags: 0
@@ -136,7 +114,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-6849408733783493144
+--- !u!114 &4586699115608248593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,10 +123,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 2404166039880781108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e683d4fd4b9a0e4e938df07580a55f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 685e28aa361178e44adcd4083ee709a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSpeed: 8
+  RunButton: 304
+  AimMouseButton: 1
+  JumpButton: 32
+--- !u!114 &7351661830673880351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2404166039880781108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25ecdda4aa0dd548a08ff4f20740a36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 5
+  RunSpeed: 10
+  RotateSpeed: 15
+  AimRotateSpeed: 20
+  WalkStaminaDrain: 0.1
+  RunStaminaDrain: 0.3
+  Gravity: -9.81
+  JumpSpeed: 8
 --- !u!1 &2404166040582922211
 GameObject:
   m_ObjectHideFlags: 0

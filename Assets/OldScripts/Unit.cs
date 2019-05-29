@@ -9,7 +9,7 @@ public class Unit: MonoBehaviour
     #region StaminaUsing
     [SerializeField] private CharacterStats _charStats;
     [SerializeField] private Image _image;
-    [SerializeField] private MovementController _moveStatus;
+    [SerializeField] private OldMovementController _moveStatus;
     [SerializeField] private float _staminaPercent;
     [SerializeField] private float _staminaConst = 100;
     private float _staminaRunCoast = 0.5f;
@@ -92,7 +92,7 @@ public class Unit: MonoBehaviour
         #region StaminaAwake
         _charStats = FindObjectOfType<CharacterStats>();
         _image = GetComponent<Image>();
-        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementController>(); // кэш MovementController, поиск по тегу Player
+        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<OldMovementController>(); // кэш MovementController, поиск по тегу Player
         _MaxStamina = _charStats._MaxStamina;
         _stamina = _MaxStamina;
         #endregion

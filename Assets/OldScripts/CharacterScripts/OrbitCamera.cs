@@ -41,16 +41,9 @@ public class OrbitCamera : MonoBehaviour
 
     //Флаг для наличия препятствий
     private bool CameraObstacle;
-
-    //Флаг автодвижения камеры.
-    private bool AutoMove;
-
+    
     //Луч для проверки препятствия перед камерой.
     private RaycastHit Ray;
-
-    private Vector3 LastClearPosition;
-
-    private Vector3 OffsetTemp;
 
     //Маска
     public LayerMask Mask;
@@ -64,9 +57,6 @@ public class OrbitCamera : MonoBehaviour
 
         //Задаем начальное расстояние.
         Offset = Player.transform.position - StartCameraDistance;
-
-        //Запоминаем расстояние.
-        OffsetTemp = Offset;
     }
 
     void LateUpdate()

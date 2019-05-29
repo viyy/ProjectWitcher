@@ -278,12 +278,14 @@ namespace Assets.Scripts.Controllers
 
             //Делаем луч видимым
             Debug.DrawRay(Player.transform.position, (-Player.transform.up * PlayerMovement.GroundRayDistance), Color.green);
-
-            IsGrounded = false;
-
+            
             if(Y < 0 & Physics.Raycast(Player.transform.position, Vector3.down, out RayHit))
             {
                 IsGrounded = RayHit.distance < PlayerMovement.GroundRayDistance;
+            }
+            else
+            {
+                IsGrounded = false;
             }
         }
     }

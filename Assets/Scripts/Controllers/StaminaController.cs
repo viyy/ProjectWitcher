@@ -69,11 +69,9 @@ namespace Assets.Scripts.Controllers
             {
                 Regenerate();
             }
-            else
-            {
-                RunStaminaDrain(RunPress);
-                JumpStaminaDrain(JumpPress);
-            }
+
+            RunStaminaDrain(RunPress);
+            JumpStaminaDrain(JumpPress);
 
             //Ограничиваем значения стамины
             Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2404166039880781118}
   - component: {fileID: 4586699115608248593}
   - component: {fileID: 7351661830673880351}
+  - component: {fileID: -608622798560952637}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -145,10 +146,28 @@ MonoBehaviour:
   RunSpeed: 10
   RotateSpeed: 15
   AimRotateSpeed: 20
-  WalkStaminaDrain: 0.1
-  RunStaminaDrain: 0.3
   Gravity: -9.81
-  JumpSpeed: 8
+  JumpHeight: 10
+  GroundRayDistance: 1.2
+  MinimumFall: -1
+  TerminalFall: -15
+--- !u!114 &-608622798560952637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2404166039880781108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ff57860a5c88345894430ca1817e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stamina: 100
+  StaminaMaximum: 100
+  RunStaminaDrain: 0.5
+  StaminaJumpCoast: 30
+  StaminaRegenRate: 0.1
 --- !u!1 &2404166040582922211
 GameObject:
   m_ObjectHideFlags: 0

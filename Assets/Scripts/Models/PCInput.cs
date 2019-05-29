@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Models
 {
-    public class PCInput:BaseObject
+    public class PCInput
     {
         public enum MouseButtons
         {

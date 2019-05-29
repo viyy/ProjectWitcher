@@ -14,9 +14,13 @@ namespace Assets.Scripts.Controllers
 
     class CameraController : BaseController
     {
+        #region Модель
+
         //Модель камеры
         private CameraModel CameraModel;
 
+        #endregion
+        
         //Камера Unity
         public UnityCamera Camera { get; private set; }
 
@@ -56,14 +60,16 @@ namespace Assets.Scripts.Controllers
         /// <param name="CameraModel">Модель камеры</param>
         /// <param name="Player">Позиция игрока</param>
         /// <param name="Camera">Ссылка на MainCamera</param>
-        public CameraController(CameraModel CameraModel, Transform Player, UnityCamera Camera)
+        public CameraController(CameraModel CameraModel, Transform Player, UnityCamera Camera, PCInputController inputController)
         {
+            //Получаем модель для камеры.
             this.CameraModel = CameraModel;
+
             this.Player = Player;
             this.Camera = Camera;
 
             //Получаем ссылку на контроллер ввода
-            inputController = StartScript.GetStartScript.inputController;
+            this.inputController = inputController;
 
             //Вычисляем стартовое положение камеры
             StartCameraDistance = Player.transform.position + (-Player.transform.forward * (CameraModel.CameraMinDistance + CameraModel.CameraMaxDistance / 2));

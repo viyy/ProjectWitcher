@@ -1,14 +1,8 @@
-﻿using Assets.Scripts.BaseScripts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Models
 {
-    class CameraModel:BaseObject
+    class CameraModel:MonoBehaviour
     {
         [SerializeField] public float CameraMinDistance = 4.0f;
 

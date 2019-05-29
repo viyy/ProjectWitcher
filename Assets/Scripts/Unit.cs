@@ -7,7 +7,6 @@ public class Unit: MonoBehaviour
 
     //Скрипт Стамины
     #region StaminaUsing
-    [SerializeField] private CharacterStats _charStats;
     [SerializeField] private Image _image;
     [SerializeField] private MovementController _moveStatus;
     [SerializeField] private float _staminaPercent;
@@ -88,14 +87,6 @@ public class Unit: MonoBehaviour
         }
         #endregion
 
-        //Awake Скрипта Стамины
-        #region StaminaAwake
-        _charStats = FindObjectOfType<CharacterStats>();
-        _image = GetComponent<Image>();
-        _moveStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<MovementController>(); // кэш MovementController, поиск по тегу Player
-        _MaxStamina = _charStats._MaxStamina;
-        _stamina = _MaxStamina;
-        #endregion
     }
 
     private void Start()

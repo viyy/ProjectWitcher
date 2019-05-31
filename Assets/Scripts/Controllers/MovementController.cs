@@ -29,7 +29,7 @@ namespace Assets.Scripts.Controllers
 
         //Ccылка на контроллер ввода
         PCInputController inputController;
-        
+
         //Контроллер персонажа !!! Временное решение !!!
         protected CharacterController CharacterController;
 
@@ -38,6 +38,9 @@ namespace Assets.Scripts.Controllers
         public bool IsRunning { get; private set; }
         public bool IsGrounded { get; private set; }
         public bool IsStanding { get; private set; }
+        public bool IsRolling { get; private set; }
+
+        private bool SpecialMove = false;
 
         #endregion
 
@@ -61,6 +64,17 @@ namespace Assets.Scripts.Controllers
 
         //Структура для получения информации о столкновении луча с объектом.
         private RaycastHit RayHit;
+
+        //Вектор для кувырка
+        Vector3 EndPoint;
+        
+        //Вектор направления кувырка
+        Vector3 RollDirection;
+
+        //Позиция игрока до кувырка
+        Vector3 PositionBeforRoll;
+
+        float RollDistance;
 
         /// <summary>
         /// 
@@ -103,21 +117,17 @@ namespace Assets.Scripts.Controllers
             //Проверяем стоит ли персонаж на месте
             IsStanding = IsGrounded & (Z == 0 & X == 0);
 
-            Debug.Log("Standing: "+IsStanding);
-
+            //Прыжки и гравитация
             JumpAndGravity();
 
-            //Если были нажаты клавиши то:
-            if (!inputController.Aim)
-            {
-                CharacterMovement();
-            }
+            //Передвижение
+            CharacterMove();
+            
+        }
 
-            //Если зажата правая кнопка мыши
-            else
-            {
-                AimCharacterMovement();
-            }
+        public override void ControllerLateUpdate()
+        {
+            Roll();
         }
 
         /// <summary>
@@ -127,6 +137,8 @@ namespace Assets.Scripts.Controllers
         private void GetInputs(PCInputController inputController)
         {
             IsRunning = StartScript.GetStartScript.staminaController.CanRun;
+
+            IsRolling = StartScript.GetStartScript.staminaController.CanRoll;
 
             // Check to see if the A or D key are being pressed
             X = Input.GetAxis("Horizontal") * (IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
@@ -143,7 +155,7 @@ namespace Assets.Scripts.Controllers
             //Если игрок стоит на поверхности то можем прыгать.
             if (IsGrounded)
             {
-                if(StartScript.GetStartScript.staminaController.CanJump)
+                if (StartScript.GetStartScript.staminaController.CanJump)
                 {
                     Y = PlayerMovement.JumpHeight;
                 }
@@ -171,107 +183,181 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// Метод движения с регулированием вращения персонажа камерой
+        /// Метод перемещения игрока
         /// </summary>
-        /// <param name="Movement">Вектор движения</param>
-        /// <param name="AxisX">Направление по оси X</param>
-        /// <param name="AxisZ">Направление по оси Z</param>
-        private void AimCharacterMovement()
+        private void CharacterMove()
         {
-            //Добавляем скорость движения. Изменяем положение по осям x и z
-            Movement.x = X;
-            Movement.z = Z;
+            if (!SpecialMove)
+            {
+                //Добавляем скорость движения. Изменяем положение по осям x и z
+                Movement.x = X;
+                Movement.z = Z;
+            }
 
             //Ограничиваем скорость движения по диагонали.
             Movement = Vector3.ClampMagnitude(Movement, IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
 
-            //Кватернион для сохранения текущего вращения камеры.
-            TempCameraRotation = Camera.rotation;
-
             //Задаем угол Эулера для камеры как координату оси Y, z и x оставляем 0.
             Camera.eulerAngles = new Vector3(0, Camera.eulerAngles.y, 0);
-
-            //Сохраняем поворот камеры
-            CharacterAimRotation = Camera.rotation;
 
             if (IsGrounded)
             {
                 //Переводим локальные координаты вектора движения игрока в глобальные.
                 Movement = Camera.TransformDirection(Movement);
             }
-            else
+
+            switch (inputController.Aim)
             {
-                //Прыгаем в направлении куда смотрит игрок. Можем регулировать дальность прыжка зажимаю WASD
-                Movement = Player.forward * Movement.magnitude;
-                Debug.DrawRay(Player.position, Player.forward, Color.red, 5f);
+                case true:
+
+                    if (!IsGrounded)
+                    {
+                        //Прыгаем в направлении движения игрока. Можем регулировать дальность прыжка зажимаю WASD
+                        Movement = CharacterController.velocity * Movement.normalized.magnitude;
+                    }
+
+                    //Сохраняем поворот камеры
+                    CharacterAimRotation = Camera.rotation;
+
+                    //Вращаем персонажа если она на поверхности.
+                    if (IsGrounded & !SpecialMove)
+                    {
+                        Player.rotation = Quaternion.Lerp(Player.rotation, CharacterAimRotation, PlayerMovement.AimRotateSpeed * Time.deltaTime);
+                    }
+
+                    break;
+
+                case false:
+
+                    if (!IsGrounded)
+                    {
+                        //Прыгаем в направлении куда смотрит игрок. Можем регулировать дальность прыжка зажимаю WASD
+                        Movement = Player.forward * Movement.magnitude;
+                    }
+
+                    //Создаем кватернион направления движения, метод LookRotation() вычисляет кватернион который смотрит в направлении движения.
+                    if (Movement != Vector3.zero)
+                    {
+                        Direction = Quaternion.LookRotation(Movement);
+                    }
+
+                    //Вращаем персонажа если он двигается и он на поверхности
+                    if (Movement != Vector3.zero & IsGrounded)
+                    {
+                        Player.rotation = Quaternion.Lerp(Player.rotation, Direction, PlayerMovement.AimRotateSpeed * Time.deltaTime);
+                    }
+
+                    break;
             }
 
-            //Возвращаем поворот камеры.
-            Camera.rotation = TempCameraRotation;
-
-            //Вращаем персонажа
-            if (IsGrounded)
-            {
-                Player.rotation = Quaternion.Lerp(Player.rotation, CharacterAimRotation, PlayerMovement.AimRotateSpeed * Time.deltaTime);
-            }
-
-            //Двигаем персонажа
+            //Задаем направление по горизонтали
             Movement.y = Y;
 
             //Двигаем персонажа
             CharacterController.Move(Movement * Time.deltaTime);
+
+            #region Debug
+
+            Debug.DrawRay(Player.position, CharacterController.velocity.normalized, Color.blue, 1f);
+
+            #endregion
         }
 
-        /// <summary>
-        /// Метод движения персонажа
-        /// </summary>
-        /// <param name="Movement">Вектор движения</param>
-        /// <param name="AxisX">Направление по оси X</param>
-        /// <param name="AxisZ">Направление по оси Z</param>
-        private void CharacterMovement()
-        {
-            //Добавляем скорость движения. Изменяем положение по осям x и z
-            Movement.x = X;
-            Movement.z = Z;
+        #region Old Movement
 
-            //Ограничиваем скорость движения по диагонали.
-            Movement = Vector3.ClampMagnitude(Movement, IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
+        ///// <summary>
+        ///// Метод движения с регулированием вращения персонажа камерой
+        ///// </summary>
+        ///// <param name="Movement">Вектор движения</param>
+        ///// <param name="AxisX">Направление по оси X</param>
+        ///// <param name="AxisZ">Направление по оси Z</param>
+        //private void AimCharacterMovement()
+        //{
+        //    //Добавляем скорость движения. Изменяем положение по осям x и z
+        //    Movement.x = X;
+        //    Movement.z = Z;
 
-            //Кватернион для сохранения текущего вращения камеры.
-            TempCameraRotation = Camera.rotation;
+        //    //Ограничиваем скорость движения по диагонали.
+        //    Movement = Vector3.ClampMagnitude(Movement, IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
 
-            //Задаем угол Эулера для камеры как координату оси Y, z и x оставляем 0.
-            Camera.eulerAngles = new Vector3(0, Camera.eulerAngles.y, 0);
-            
-            if(IsGrounded)
-            {
-                //Переводим локальные координаты вектора движения игрока в глобальные.
-                Movement = Camera.TransformDirection(Movement);
-            }
-            else
-            {
-                //Прыгаем в направлении куда смотрит игрок. Можем регулировать дальность прыжка зажимаю WASD
-                Movement = Player.forward * Movement.magnitude;
-                Debug.DrawRay(Player.position, Player.forward, Color.red, 5f);
-            }
-            
-            //Возвращаем поворот камеры.
-            Camera.rotation = TempCameraRotation;
+        //    //Задаем угол Эулера для камеры как координату оси Y, z и x оставляем 0.
+        //    Camera.eulerAngles = new Vector3(0, Camera.eulerAngles.y, 0);
 
-            //Создаем кватернион направления движения, метод LookRotation() вычисляет кватернион который смотрит в направлении движения.
-            Direction = Quaternion.LookRotation(Movement);
+        //    if (IsGrounded)
+        //    {
+        //        //Переводим локальные координаты вектора движения игрока в глобальные.
+        //        Movement = Camera.TransformDirection(Movement);
+        //    }
+        //    else
+        //    {
+        //        //Прыгаем в направлении куда смотрит игрок. Можем регулировать дальность прыжка зажимаю WASD
+        //        Movement = CharacterController.velocity * Movement.normalized.magnitude;
+        //        Debug.DrawRay(Player.position, Player.forward, Color.green, 1f);
+        //    }
 
-            //Вращаем персонажа
-            if(Movement != Vector3.zero & IsGrounded)
-            {
-                Player.rotation = Quaternion.Lerp(Player.rotation, Direction, PlayerMovement.AimRotateSpeed * Time.deltaTime);
-            }
 
-            //Двигаем персонажа
-            Movement.y = Y;
+        //    //Сохраняем поворот камеры
+        //    CharacterAimRotation = Camera.rotation;
 
-            CharacterController.Move(Movement * Time.deltaTime);
-        }
+        //    //Вращаем персонажа
+        //    if (IsGrounded)
+        //    {
+        //        Player.rotation = Quaternion.Lerp(Player.rotation, CharacterAimRotation, PlayerMovement.AimRotateSpeed * Time.deltaTime);
+        //    }
+
+        //    //Задаем направление по горизонтали
+        //    Movement.y = Y;
+
+        //    //Двигаем персонажа
+        //    CharacterController.Move(Movement * Time.deltaTime);
+        //}
+
+        ///// <summary>
+        ///// Метод движения персонажа
+        ///// </summary>
+        ///// <param name="Movement">Вектор движения</param>
+        ///// <param name="AxisX">Направление по оси X</param>
+        ///// <param name="AxisZ">Направление по оси Z</param>
+        //private void CharacterMovement()
+        //{
+        //    //Добавляем скорость движения. Изменяем положение по осям x и z
+        //    Movement.x = X;
+        //    Movement.z = Z;
+
+        //    //Ограничиваем скорость движения по диагонали.
+        //    Movement = Vector3.ClampMagnitude(Movement, IsRunning ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
+
+        //    //Задаем угол Эулера для камеры как координату оси Y, z и x оставляем 0.
+        //    Camera.eulerAngles = new Vector3(0, Camera.eulerAngles.y, 0);
+
+        //    if (IsGrounded)
+        //    {
+        //        //Переводим локальные координаты вектора движения игрока в глобальные.
+        //        Movement = Camera.TransformDirection(Movement);
+        //    }
+        //    else
+        //    {
+        //        //Прыгаем в направлении куда смотрит игрок. Можем регулировать дальность прыжка зажимаю WASD
+        //        Movement = Player.forward * Movement.magnitude;
+        //        Debug.DrawRay(Player.position, Player.forward, Color.red, 0.1f);
+        //    }
+
+        //    //Создаем кватернион направления движения, метод LookRotation() вычисляет кватернион который смотрит в направлении движения.
+        //    Direction = Quaternion.LookRotation(Movement);
+
+        //    //Вращаем персонажа
+        //    if (Movement != Vector3.zero & IsGrounded)
+        //    {
+        //        Player.rotation = Quaternion.Lerp(Player.rotation, Direction, PlayerMovement.AimRotateSpeed * Time.deltaTime);
+        //    }
+
+        //    //Двигаем персонажа
+        //    Movement.y = Y;
+
+        //    CharacterController.Move(Movement * Time.deltaTime);
+        //}
+
+        #endregion
 
         /// <summary>
         /// Метод проверки поверхности под игроком
@@ -281,9 +367,9 @@ namespace Assets.Scripts.Controllers
             RayHit = new RaycastHit();
 
             //Делаем луч видимым
-            Debug.DrawRay(Player.transform.position, (-Player.transform.up * PlayerMovement.GroundRayDistance), Color.green);
-            
-            if(Y < 0 & Physics.Raycast(Player.transform.position, Vector3.down, out RayHit))
+            Debug.DrawRay(Player.transform.position, (-Player.transform.up * PlayerMovement.GroundRayDistance), Color.yellow);
+
+            if (Y < 0 & Physics.Raycast(Player.transform.position, Vector3.down, out RayHit))
             {
                 IsGrounded = RayHit.distance < PlayerMovement.GroundRayDistance;
             }
@@ -291,6 +377,74 @@ namespace Assets.Scripts.Controllers
             {
                 IsGrounded = false;
             }
+        }
+
+        /// <summary>
+        /// Метод кувырка
+        /// </summary>
+        private void Roll()
+        {
+            if (IsRolling)
+            {
+                if (!IsStanding)
+                {
+                    EndPoint = RollPoint(Player.transform.position, CharacterController.velocity.normalized);
+                }
+                else
+                {
+                    EndPoint = RollPoint(Player.transform.position, Player.forward);
+                }
+
+                //Задаем направление
+                RollDirection = EndPoint - Player.transform.position;
+
+                //Запоминаем дистанцию для кувырка
+                RollDistance = Vector3.Distance(Player.transform.position, EndPoint);
+
+                //Запоминаем положение игрока до кувырка
+                PositionBeforRoll = Player.transform.position;
+
+                SpecialMove = true;
+            }
+
+            if (SpecialMove)
+            {
+                Debug.DrawRay(EndPoint, Vector3.up, Color.red, 15);
+                
+                //Проверяем пройденное расстояние
+                if(Vector3.Distance(Player.transform.position, PositionBeforRoll) >= RollDistance)
+                {
+                    SpecialMove = false;
+                    return;
+                }
+
+                CharacterController.Move(RollDirection * PlayerMovement.RollSpeed * Time.deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Метод для определения конечной позиции кувырка
+        /// </summary>
+        /// <param name="PlayerPosition">Текущая позация игрока</param>
+        /// <param name="PointToMove">Предпологаемая конечная позиция кувырка</param>
+        /// <returns>Конечную позицию кувырка с учетом препятствий</returns>
+        private Vector3 RollPoint(Vector3 PlayerPosition, Vector3 PlayerDirection)
+        {
+            RaycastHit Hit = new RaycastHit();
+
+            Vector3 ResultPoint = Vector3.zero;
+
+            Vector3 StartPoint = new Vector3(PlayerPosition.x, (PlayerPosition.y - ((CharacterController.height / 2) - (CharacterController.stepOffset - 0.1f))), PlayerPosition.z);
+            Vector3 EndPoint = StartPoint + (PlayerDirection * PlayerMovement.RollDistance);
+
+            if (Physics.Linecast(StartPoint, EndPoint, out Hit))
+            {
+                ResultPoint = PlayerPosition + (PlayerDirection * (Hit.distance - (CharacterController.radius*2)));
+                return ResultPoint;
+            }
+
+            ResultPoint = PlayerPosition + (PlayerDirection * PlayerMovement.RollDistance);
+            return ResultPoint;
         }
     }
 }

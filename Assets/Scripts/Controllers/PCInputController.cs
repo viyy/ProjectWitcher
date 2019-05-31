@@ -28,6 +28,8 @@ namespace Assets.Scripts.Controllers
 
         public bool Run { get; private set; }
 
+        public bool Roll { get; private set; }
+
         #endregion
 
         #region Мышь
@@ -56,8 +58,7 @@ namespace Assets.Scripts.Controllers
             ForwardBackward = Input.GetAxis("Horizontal");
 
             LeftRight = Input.GetAxis("Vertical");
-
-            Debug.Log("Jump pressed: " +Jump);
+            
             Jump = Input.GetKeyDown(PCInputModel.JumpButton);
 
             Run = Input.GetKey(PCInputModel.RunButton);
@@ -69,6 +70,8 @@ namespace Assets.Scripts.Controllers
             Aim = Input.GetMouseButton((int)PCInputModel.AimMouseButton);
 
             Zoom = Input.GetAxis("Mouse ScrollWheel");
+
+            Roll = Input.GetKeyDown(PCInputModel.RollButton);
         }
     }
 }

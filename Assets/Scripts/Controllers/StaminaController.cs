@@ -26,6 +26,9 @@ namespace Assets.Scripts.Controllers
         private bool JumpPress;
         public bool CanJump { get; private set; }
 
+        private bool RollPress;
+        public bool CanRoll { get; private set; }
+
         private bool IsStanding;
         
         /// <summary>
@@ -55,14 +58,13 @@ namespace Assets.Scripts.Controllers
         {
             RunPress = InputController.Run;
             JumpPress = InputController.Jump;
+            RollPress = InputController.Roll;
             IsStanding = movementController.IsStanding;
         }
 
 
         public override void ControllerUpdate()
         {
-            Debug.Log("Stamina: "+Stamina);
-
             GetInputsAndFlags();
 
             if (IsStanding)
@@ -70,8 +72,9 @@ namespace Assets.Scripts.Controllers
                 Regenerate();
             }
 
-            RunStaminaDrain(RunPress);
-            JumpStaminaDrain(JumpPress);
+            RunStaminaDrain();
+            JumpStaminaDrain();
+            RollStaminaDrain();
 
             //Ограничиваем значения стамины
             Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);
@@ -89,7 +92,7 @@ namespace Assets.Scripts.Controllers
         /// Метод расхода стамины на прыжок
         /// </summary>
         /// <param name="JumpPress"></param>
-        private void JumpStaminaDrain(bool JumpPress)
+        private void JumpStaminaDrain()
         {
             CanJump = (JumpPress & Stamina > playerCharacteristics.StaminaJumpCoast);
 
@@ -103,13 +106,26 @@ namespace Assets.Scripts.Controllers
         /// Метод расхода стамины на бег
         /// </summary>
         /// <param name="RunPress"></param>
-        private void RunStaminaDrain(bool RunPress)
+        private void RunStaminaDrain()
         {
-            CanRun = (RunPress & Stamina > 0);
+            CanRun = ((RunPress & movementController.IsGrounded) & Stamina > 0);
 
             if(CanRun)
             {
                 Stamina -= playerCharacteristics.RunStaminaDrain * Time.deltaTime;
+            }
+        }
+
+        /// <summary>
+        /// Метод расхода стамины на кувырок
+        /// </summary>
+        private void RollStaminaDrain()
+        {
+            CanRoll = ((RollPress & movementController.IsGrounded) & Stamina > playerCharacteristics.StaminaRollCoast);
+
+            if(CanRoll)
+            {
+                Stamina -= playerCharacteristics.StaminaRollCoast;
             }
         }
 

@@ -22,5 +22,9 @@ namespace Assets.Scripts.Models
         public float MinimumFall = -1.0f;
 
         public float TerminalFall = -15.0f;
+
+        public float RollDistance = 5f;
+
+        public float RollSpeed = 5f;
     }
 }

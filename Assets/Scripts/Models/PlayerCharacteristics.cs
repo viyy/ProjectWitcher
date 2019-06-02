@@ -9,5 +9,6 @@ namespace Assets.Scripts.Models
         public float RunStaminaDrain = 0.5f;
         public float StaminaJumpCoast = 30f;
         public float StaminaRegenRate = 0.1f;
+        public float StaminaRollCoast = 5f;
     }
 }

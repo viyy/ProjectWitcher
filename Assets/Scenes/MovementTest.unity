@@ -451,7 +451,17 @@ PrefabInstance:
     - target: {fileID: -608622798560952637, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: StaminaJumpCoast
-      value: 10
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -608622798560952637, guid: b9e06dc6986817e49851a595730ebff8,
+        type: 3}
+      propertyPath: StaminaRollCoast
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -608622798560952637, guid: b9e06dc6986817e49851a595730ebff8,
+        type: 3}
+      propertyPath: ObstacleMask.m_Bits
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7351661830673880351, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -471,7 +481,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.222
+      value: -1.22
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -481,7 +491,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -25.036
+      value: -17.25
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -491,7 +501,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -501,7 +511,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
@@ -516,7 +526,7 @@ PrefabInstance:
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 2404166039880781104, guid: b9e06dc6986817e49851a595730ebff8,
         type: 3}

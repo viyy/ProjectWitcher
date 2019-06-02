@@ -62,6 +62,7 @@ namespace Assets.Scripts.BaseScripts
         private void LateUpdate()
         {
             cameraController.ControllerLateUpdate();
+            movementController.ControllerLateUpdate();
         }
     }
 }

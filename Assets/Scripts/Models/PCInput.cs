@@ -15,10 +15,13 @@ namespace Assets.Scripts.Models
             Right = 1
         }
 
-        [SerializeField] public KeyCode RunButton = KeyCode.LeftShift;
+        public KeyCode RunButton { get; private set; } = KeyCode.LeftShift;
 
-        [SerializeField] public MouseButtons AimMouseButton = MouseButtons.Right;
+        public MouseButtons AimMouseButton { get; private set; } = MouseButtons.Right;
 
-        [SerializeField] public KeyCode JumpButton = KeyCode.Space;
+        public KeyCode JumpButton { get; private set; } = KeyCode.Space;
+
+        public KeyCode RollButton { get; private set; } = KeyCode.LeftControl;
+        
     }
 }

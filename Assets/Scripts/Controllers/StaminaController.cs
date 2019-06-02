@@ -17,7 +17,7 @@ namespace Assets.Scripts.Controllers
 
         private MovementController movementController;
 
-        private float Stamina;
+        public float Stamina;
         private float StaminaMaximum;
 
         public bool CanRun { get; private set; }
@@ -65,6 +65,8 @@ namespace Assets.Scripts.Controllers
 
         public override void ControllerUpdate()
         {
+            Debug.Log("SC Stamina: " + Stamina);
+
             GetInputsAndFlags();
 
             if (IsStanding)
@@ -96,7 +98,7 @@ namespace Assets.Scripts.Controllers
         {
             CanJump = (JumpPress & Stamina > playerCharacteristics.StaminaJumpCoast);
 
-            if(CanJump)
+            if(CanJump & movementController.IsGrounded)
             {
                 Stamina -= playerCharacteristics.StaminaJumpCoast;
             }

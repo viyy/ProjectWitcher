@@ -11,13 +11,13 @@ namespace Assets.Scripts.Controllers
 {
     class StaminaController : BaseController
     {
-        private PlayerCharacteristics playerCharacteristics;
+        private StaminaModel staminaModel;
 
         private PCInputController InputController;
 
         private MovementController movementController;
 
-        private float Stamina;
+        private  float Stamina;
         private float StaminaMaximum;
 
         public bool CanRun { get; private set; }
@@ -30,27 +30,28 @@ namespace Assets.Scripts.Controllers
         public bool CanRoll { get; private set; }
 
         private bool IsStanding;
+        private bool IsWalking;
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Stamina">Ссылка на текущее значение стамины</param>
-        /// <param name="playerCharacteristics">Ссылка на модель характеристик игрока</param>
+        /// <param name="staminaModel">Ссылка на модель характеристик игрока</param>
         /// <param name="InputController">Ссылка на контроллер ввода</param>
         /// <param name="movementController">Ссылка на контроллер перемещения</param>
-        public StaminaController(ref float Stamina, PlayerCharacteristics playerCharacteristics, 
+        public StaminaController(ref float Stamina, StaminaModel staminaModel, 
             PCInputController InputController, MovementController movementController)
         {
             //Получаем ссылки
-            this.Stamina = Stamina;
+            this.Stamina =  Stamina;
 
-            this.playerCharacteristics = playerCharacteristics;
+            this.staminaModel = staminaModel;
 
             this.movementController = movementController;
 
             this.InputController = InputController;
 
-            StaminaMaximum = playerCharacteristics.StaminaMaximum;
+            StaminaMaximum = staminaModel.StaminaMaximum;
         }
 
 
@@ -60,6 +61,7 @@ namespace Assets.Scripts.Controllers
             JumpPress = InputController.Jump;
             RollPress = InputController.Roll;
             IsStanding = movementController.IsStanding;
+            IsWalking = movementController.IsWalking;
         }
 
 
@@ -69,7 +71,11 @@ namespace Assets.Scripts.Controllers
 
             if (IsStanding)
             {
-                Regenerate();
+                Regenerate(staminaModel.StaminaStandRegenRate);
+            }
+            if (IsWalking)
+            {
+                Regenerate(staminaModel.StaminaWalkRegenRate);
             }
 
             RunStaminaDrain();
@@ -78,14 +84,16 @@ namespace Assets.Scripts.Controllers
 
             //Ограничиваем значения стамины
             Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);
+            staminaModel.Stamina = Stamina;
         }
 
         /// <summary>
         /// Метод регенерации стамины
         /// </summary>
-        private void Regenerate()
+        private void Regenerate(float reg)
         {
-            Stamina += playerCharacteristics.StaminaRegenRate * Time.deltaTime;
+            //  Stamina += staminaModel.StaminaRegenRate * Time.deltaTime;
+            Stamina += reg * Time.deltaTime;
         }
 
         /// <summary>
@@ -94,11 +102,11 @@ namespace Assets.Scripts.Controllers
         /// <param name="JumpPress"></param>
         private void JumpStaminaDrain()
         {
-            CanJump = (JumpPress & Stamina > playerCharacteristics.StaminaJumpCoast);
+            CanJump = (JumpPress & Stamina > staminaModel.StaminaJumpCoast);
 
             if(CanJump)
             {
-                Stamina -= playerCharacteristics.StaminaJumpCoast;
+                Stamina -= staminaModel.StaminaJumpCoast;
             }
         }
 
@@ -112,7 +120,7 @@ namespace Assets.Scripts.Controllers
 
             if(CanRun)
             {
-                Stamina -= playerCharacteristics.RunStaminaDrain * Time.deltaTime;
+                Stamina -= staminaModel.StaminaRunCoast * Time.deltaTime;
             }
         }
 
@@ -121,11 +129,11 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void RollStaminaDrain()
         {
-            CanRoll = ((RollPress & movementController.IsGrounded) & Stamina > playerCharacteristics.StaminaRollCoast);
+            CanRoll = ((RollPress & movementController.IsGrounded) & Stamina > staminaModel.StaminaRollCoast);
 
             if(CanRoll)
             {
-                Stamina -= playerCharacteristics.StaminaRollCoast;
+                Stamina -= staminaModel.StaminaRollCoast;
             }
         }
 

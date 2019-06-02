@@ -19,7 +19,7 @@ namespace Assets.Scripts.Models
         [SerializeField] public float CameraObstacleAvoidSpeed = 5;
 
         [SerializeField] public float CameraReturnSpeed = 10;
-        
+
         [SerializeField] public LayerMask Mask;
     }
 }

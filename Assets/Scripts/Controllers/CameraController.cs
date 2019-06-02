@@ -72,7 +72,7 @@ namespace Assets.Scripts.Controllers
             this.inputController = inputController;
 
             //Вычисляем стартовое положение камеры
-            StartCameraDistance = Player.transform.position + (-Player.transform.forward * (CameraModel.CameraMinDistance + CameraModel.CameraMaxDistance / 2));
+            StartCameraDistance = Player.transform.position + (-Vector3.forward * (CameraModel.CameraMinDistance + CameraModel.CameraMaxDistance / 2));
 
             //Задаем начальное расстояние между камерой и игроком
             Offset = Player.transform.position - StartCameraDistance;

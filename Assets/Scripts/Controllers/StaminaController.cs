@@ -65,8 +65,6 @@ namespace Assets.Scripts.Controllers
 
         public override void ControllerUpdate()
         {
-            Debug.Log("SC Stamina: " + Stamina);
-
             GetInputsAndFlags();
 
             if (IsStanding)
@@ -79,7 +77,7 @@ namespace Assets.Scripts.Controllers
             RollStaminaDrain();
 
             //Ограничиваем значения стамины
-            Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);
+            playerCharacteristics.Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);
         }
 
         /// <summary>
@@ -87,7 +85,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void Regenerate()
         {
-            Stamina += playerCharacteristics.StaminaRegenRate * Time.deltaTime;
+            playerCharacteristics.Stamina += playerCharacteristics.StaminaRegenRate * Time.deltaTime;
         }
 
         /// <summary>
@@ -100,7 +98,7 @@ namespace Assets.Scripts.Controllers
 
             if(CanJump & movementController.IsGrounded)
             {
-                Stamina -= playerCharacteristics.StaminaJumpCoast;
+                playerCharacteristics.Stamina -= playerCharacteristics.StaminaJumpCoast;
             }
         }
 
@@ -114,7 +112,7 @@ namespace Assets.Scripts.Controllers
 
             if(CanRun)
             {
-                Stamina -= playerCharacteristics.RunStaminaDrain * Time.deltaTime;
+                playerCharacteristics.Stamina -= playerCharacteristics.RunStaminaDrain * Time.deltaTime;
             }
         }
 
@@ -127,7 +125,7 @@ namespace Assets.Scripts.Controllers
 
             if(CanRoll)
             {
-                Stamina -= playerCharacteristics.StaminaRollCoast;
+                playerCharacteristics.Stamina -= playerCharacteristics.StaminaRollCoast;
             }
         }
 

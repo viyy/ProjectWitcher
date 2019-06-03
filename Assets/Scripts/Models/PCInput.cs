@@ -12,6 +12,7 @@ namespace Assets.Scripts.Models
     {
         public enum MouseButtons
         {
+            Left = 0,
             Right = 1
         }
 
@@ -22,6 +23,8 @@ namespace Assets.Scripts.Models
         public KeyCode JumpButton { get; private set; } = KeyCode.Space;
 
         public KeyCode RollButton { get; private set; } = KeyCode.LeftControl;
-        
+
+        public MouseButtons LeftMouseButton { get; private set; } = MouseButtons.Left;
+
     }
 }

@@ -29,6 +29,12 @@ namespace Assets.Scripts.Controllers
         private bool RollPress;
         public bool CanRoll { get; private set; }
 
+        private bool NormalAttackPress;
+        public bool CanNormalAttack { get; private set; }
+
+        private bool HeavyAttackPress;
+        public bool CanHeavyAttack { get; private set; }
+
         private bool IsStanding;
         private bool IsWalking;
         
@@ -60,6 +66,8 @@ namespace Assets.Scripts.Controllers
             RunPress = InputController.Run;
             JumpPress = InputController.Jump;
             RollPress = InputController.Roll;
+            NormalAttackPress = InputController.LeftClick;
+            // Реализовать тяжелую атаку !!!!!!!!!!!!!!!!!!!!! HeavyAttackPress = InputController. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             IsStanding = movementController.IsStanding;
             IsWalking = movementController.IsWalking;
         }
@@ -136,5 +144,30 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+        /// <summary>
+        /// Метод расхода стамины на Обычную Атаку
+        /// </summary>
+        private void NormalAttackStaminaDrain()
+        {
+            CanNormalAttack = ((NormalAttackPress & movementController.IsGrounded) & Stamina > staminaModel.StaminaNormalAttackCoast);
+
+            if (CanNormalAttack)
+            {
+                Stamina -= staminaModel.StaminaNormalAttackCoast;
+            }
+        }
+
+        /// <summary>
+        /// Метод расхода стамины на Тяжелую Атаку
+        /// </summary>
+        private void HeavyAttackStaminaDrain()
+        {
+            CanHeavyAttack = ((HeavyAttackPress & movementController.IsGrounded) & Stamina > staminaModel.StaminaNormalAttackCoast);
+
+            if (CanHeavyAttack)
+            {
+                Stamina -= staminaModel.StaminaHeavyAttackCoast;
+            }
+        }
     }
 }

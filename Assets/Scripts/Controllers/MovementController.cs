@@ -233,7 +233,7 @@ namespace Assets.Scripts.Controllers
                     //Вращаем персонажа если она на поверхности.
                     if (IsGrounded & !SpecialMove)
                     {
-                        Player.rotation *= Quaternion.Euler(0, inputController.RotationY * 100 * Time.deltaTime, 0);
+                        Player.rotation *= Quaternion.Euler(0, inputController.RotationY * PlayerMovement.AimRotateSpeed * Time.deltaTime, 0);
                     }
 
                     break;
@@ -255,7 +255,7 @@ namespace Assets.Scripts.Controllers
                     //Вращаем персонажа если он двигается и он на поверхности
                     if (Movement != Vector3.zero & IsGrounded)
                     {
-                        Player.rotation = Quaternion.Lerp(Player.rotation, Direction, PlayerMovement.AimRotateSpeed * Time.deltaTime);
+                        Player.rotation = Quaternion.Lerp(Player.rotation, Direction, PlayerMovement.RotateSpeed * Time.deltaTime);
                     }
 
                     break;

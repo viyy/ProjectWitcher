@@ -31,7 +31,7 @@ public class AnimController : BaseController
         GetInputs();
 
         //Вызов метода проигрывания анимаций игрока
-        PlayAnimations();   
+        PlayAnimations();
     }
 
     #region Метод Проигрывания Анимаций
@@ -90,8 +90,8 @@ public class AnimController : BaseController
     //Метод проверки состояний различных состояний игрока
     private void GetInputs()
     {
-        horizontal = StartScript.GetStartScript.inputController.LeftRight;
-        vertical = StartScript.GetStartScript.inputController.ForwardBackward;
+        horizontal = StartScript.GetStartScript.inputController.ForwardBackward;
+        vertical = StartScript.GetStartScript.inputController.LeftRight;
         jump = StartScript.GetStartScript.inputController.Jump;
         run = StartScript.GetStartScript.inputController.Run;
         roll = StartScript.GetStartScript.inputController.Roll;

@@ -16,5 +16,9 @@ namespace Assets.Scripts.Models
         public float StaminaStandRegenRate = 25f;
 
         public float StaminaWalkRegenRate = 5f;
+
+        public float StaminaNormalAttackCoast = 10f;
+
+        public float StaminaHeavyAttackCoast = 30f;
     }
 }

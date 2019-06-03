@@ -36,6 +36,8 @@ namespace Assets.Scripts.Controllers
 
         public bool Aim { get; private set; }
 
+        public bool LeftClick { get; private set; }
+
         public float RotationY { get; private set; }
 
         public float RotationX { get; private set; }
@@ -68,6 +70,8 @@ namespace Assets.Scripts.Controllers
             RotationX = -Input.GetAxis("Mouse Y");
 
             Aim = Input.GetMouseButton((int)PCInputModel.AimMouseButton);
+
+            LeftClick = Input.GetMouseButton((int)PCInputModel.LeftMouseButton);
 
             Zoom = Input.GetAxis("Mouse ScrollWheel");
 

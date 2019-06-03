@@ -16,7 +16,7 @@ namespace Assets.Scripts.Views
 
         void Awake()
         {
-            staminaModel = GameObject.Find("Player").GetComponent<StaminaModel>();
+            staminaModel = GameObject.FindGameObjectWithTag("Player").GetComponent<StaminaModel>();
             _scaleImage = GetComponent<Image>();
         }
 

@@ -21,7 +21,9 @@ namespace Assets.Scripts.BaseScripts
 
         public StaminaController staminaController { get; private set; }
 
-        private List<BaseController> AllControllers = new List<BaseController>(5);
+        public AnimController animController { get; private set; }
+
+        private List<BaseController> AllControllers = new List<BaseController>(6);
 
         #endregion
 
@@ -38,6 +40,8 @@ namespace Assets.Scripts.BaseScripts
             cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(),Player.transform, Camera.main, inputController);
             movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
             staminaController = new StaminaController(ref Player.GetComponent<StaminaModel>().Stamina, Player.GetComponent<StaminaModel>(), inputController, movementController);
+            animController = new AnimController(Player);
+
 
 
             #region Добавляем контроллеры в коллекцию
@@ -46,6 +50,7 @@ namespace Assets.Scripts.BaseScripts
             AllControllers.Add(cameraController);
             AllControllers.Add(movementController);
             AllControllers.Add(staminaController);
+            AllControllers.Add(animController);
 
             #endregion
         }

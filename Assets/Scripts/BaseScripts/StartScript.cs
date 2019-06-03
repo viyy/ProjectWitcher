@@ -34,10 +34,11 @@ namespace Assets.Scripts.BaseScripts
             GetStartScript = this;
 
             GameObject Player = GameObject.FindGameObjectWithTag("Player");
+            Transform CameraCenter = GameObject.FindGameObjectWithTag("CameraCenter").transform;
 
             //Создаем контроллеры
             inputController = new PCInputController();
-            cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(),Player.transform, Camera.main, inputController);
+            cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(), CameraCenter, Camera.main, inputController);
             movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
             staminaController = new StaminaController(ref Player.GetComponent<StaminaModel>().Stamina, Player.GetComponent<StaminaModel>(), inputController, movementController);
             animController = new AnimController(Player);

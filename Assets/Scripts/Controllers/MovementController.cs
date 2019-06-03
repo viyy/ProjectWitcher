@@ -39,6 +39,7 @@ namespace Assets.Scripts.Controllers
         public bool IsGrounded { get; private set; }
         public bool IsStanding { get; private set; }
         public bool IsRolling { get; private set; }
+        public bool IsWalking { get; private set; }
         public bool IsAiming { get; private set; }
 
         private bool SpecialMove = false;
@@ -120,11 +121,14 @@ namespace Assets.Scripts.Controllers
             //Проверяем стоит ли персонаж на месте
             IsStanding = IsGrounded & (Z == 0 & X == 0);
 
+            IsWalking = IsGrounded & !IsRunning & (Z > 0 || X > 0);
+
             //Прыжки и гравитация
             JumpAndGravity();
 
             //Передвижение
             CharacterMove();
+            
             
         }
 

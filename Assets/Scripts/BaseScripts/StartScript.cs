@@ -37,7 +37,7 @@ namespace Assets.Scripts.BaseScripts
             inputController = new PCInputController();
             cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(),Player.transform, Camera.main, inputController);
             movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
-            staminaController = new StaminaController(ref Player.GetComponent<PlayerCharacteristics>().Stamina, Player.GetComponent<PlayerCharacteristics>(), inputController, movementController);
+            staminaController = new StaminaController(ref Player.GetComponent<StaminaModel>().Stamina, Player.GetComponent<StaminaModel>(), inputController, movementController);
 
 
             #region Добавляем контроллеры в коллекцию

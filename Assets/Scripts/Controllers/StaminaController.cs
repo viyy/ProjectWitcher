@@ -92,7 +92,6 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void Regenerate(float reg)
         {
-            //  Stamina += staminaModel.StaminaRegenRate * Time.deltaTime;
             Stamina += reg * Time.deltaTime;
         }
 
@@ -104,7 +103,7 @@ namespace Assets.Scripts.Controllers
         {
             CanJump = (JumpPress & Stamina > staminaModel.StaminaJumpCoast);
 
-            if(CanJump)
+            if(CanJump & movementController.IsGrounded)
             {
                 Stamina -= staminaModel.StaminaJumpCoast;
             }

@@ -27,6 +27,10 @@ namespace Assets.Scripts.Controllers
         //Положение игрока
         private Transform Player;
 
+        private Transform AimPosition;
+
+        private Transform PlayerHand;
+
         //Угол вращения камеры по оси Y.
         private float RotationY = 0;
 
@@ -42,17 +46,33 @@ namespace Assets.Scripts.Controllers
         //Расстояние до камеры с препятствием.
         private Vector3 ObstacleOffset;
 
+        private Vector3 AimOffset;
+
         //Стартовое расстояние до камеры.
         private Vector3 StartCameraDistance;
 
         //Флаг для наличия препятствий
         private bool CameraObstacle;
 
+        private bool IsAiming;
+
         //Луч для проверки препятствия перед камерой.
         private RaycastHit Ray;
 
         //Ccылка на контроллер ввода
         PCInputController inputController;
+
+        //Кватернион для вращения
+        Quaternion Rotation;
+
+        //Вращение по оси Y
+        public float YRotation
+        {
+            get
+            {
+                return RotationY;
+            }
+        }
 
         /// <summary>
         /// 
@@ -62,6 +82,10 @@ namespace Assets.Scripts.Controllers
         /// <param name="Camera">Ссылка на MainCamera</param>
         public CameraController(CameraModel CameraModel, Transform Player, UnityCamera Camera, PCInputController inputController)
         {
+            AimPosition = GameObject.FindGameObjectWithTag("AimPosition").transform;
+
+            PlayerHand = GameObject.FindGameObjectWithTag("PlayerHand").transform;
+
             //Получаем модель для камеры.
             this.CameraModel = CameraModel;
 
@@ -76,6 +100,7 @@ namespace Assets.Scripts.Controllers
 
             //Задаем начальное расстояние между камерой и игроком
             Offset = Player.transform.position - StartCameraDistance;
+            
         }
         
         public override void ControllerUpdate()
@@ -85,30 +110,40 @@ namespace Assets.Scripts.Controllers
 
         public override void ControllerLateUpdate()
         {
-            GetInputs(inputController);
+            AimOffset = Player.transform.position - AimPosition.position;
+
+            GetInputs();
 
             //Ограничиваем движение камеры по оси X
-            RotationX = Mathf.Clamp(RotationX, 0, 70);
+            RotationX = (IsAiming) ? Mathf.Clamp(RotationX, -45, 45) : Mathf.Clamp(RotationX, 0, 70);
 
             //Преобразуем угол Еулера в кватернион.
-            Quaternion Rotation = Quaternion.Euler(RotationX, RotationY, 0);
+            Rotation = Quaternion.Euler(RotationX, RotationY, 0);
 
             //Проверяем коллизию
-            CollisionCheck(Player.transform.position, Rotation);
-
+            if (!IsAiming)
+            {
+                CollisionCheck(Player.transform.position, Rotation);
+            }
+            
             //Двигаем камеру
             CameraMove(Rotation);
 
-            //Камера все время повернута в сторону игрока.
-            Camera.transform.LookAt(Player.transform);
+            //Задаем направление камеры, если игрок не прицеливается
+            if(!IsAiming)
+            {
+                Camera.transform.LookAt(Player.transform);
+            }
         }
 
         /// <summary>
         /// Получаем данные из контроллера ввода
         /// </summary>
         /// <param name="inputController">Контроллер ввода</param>
-        private void GetInputs(PCInputController inputController)
+        private void GetInputs()
         {
+            IsAiming = inputController.Aim;
+
             //Получаем значения колесика мыши
             Zoom = inputController.Zoom;
 
@@ -124,16 +159,30 @@ namespace Assets.Scripts.Controllers
         /// <param name="Rotation">Текущее вращение камеры</param>
         private void CameraMove(Quaternion Rotation)
         {
-            switch (CameraObstacle)
+            switch(CameraObstacle & !IsAiming)
             {
                 case true:
 
                     Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleOffset, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
+                    
                     break;
 
                 case false:
+                    
+                    if (!IsAiming)
+                    {
+                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, Player.transform.position - (Rotation * Offset), CameraModel.CameraReturnSpeed * Time.deltaTime);
 
-                    Camera.transform.position = Vector3.Lerp(Camera.transform.position, Player.transform.position - (Rotation * Offset), CameraModel.CameraReturnSpeed * Time.deltaTime);
+                        PlayerHand.rotation = Quaternion.Euler(Player.eulerAngles.x, Player.eulerAngles.y, 0);
+                    }
+                    else
+                    {
+                        Camera.transform.rotation = Player.transform.rotation * Quaternion.Euler(RotationX, 0, 0);
+                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, AimPosition.position, CameraModel.CameraReturnSpeed * Time.deltaTime);
+
+                        PlayerHand.rotation = Quaternion.Euler(RotationX, Player.eulerAngles.y, 0);
+                    }
+                    
                     break;
             }
 

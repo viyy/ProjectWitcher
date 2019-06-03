@@ -11,7 +11,7 @@ namespace Assets.Scripts.Models
 
         public float RotateSpeed = 15f;
 
-        public float AimRotateSpeed = 20f;
+        public float AimRotateSpeed = 120f;
 
         public float Gravity = -9.81f;
 

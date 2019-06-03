@@ -143,7 +143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -545, y: 230}
+  m_AnchoredPosition: {x: -383, y: 306}
   m_SizeDelta: {x: 230, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1868640055513050828
@@ -198,4 +198,4 @@ MonoBehaviour:
   _scaleImage: {fileID: 0}
   _currentStaminaPercent: 0
   _currentStamina: 0
-  playerCharacteristics: {fileID: 0}
+  staminaModel: {fileID: 0}

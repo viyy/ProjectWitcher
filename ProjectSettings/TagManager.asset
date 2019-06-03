@@ -8,6 +8,7 @@ TagManager:
   - AimPosition
   - PlayerHand
   - CameraCenter
+  - PlayerAnimator
   layers:
   - Default
   - TransparentFX

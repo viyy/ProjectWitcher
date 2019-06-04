@@ -3,24 +3,27 @@ using Assets.Scripts.BaseScripts;
 
 public class AnimController : BaseController
 {
-    //
+    //Ссылка на аниматор
     private Animator _animator;
+    //Ссылка на модель игрока
     private GameObject player;
-    private bool roll;
-    private bool jump;
-    private bool run;
-    private bool normaAttack;
-    private bool heavyAttack;
-    private float horizontal;
-    private float vertical;
 
-    public PlayerAttackModel playerAttackModel;
+    //Состояния передающиеся в параметры анимаций (Состояния анимаций)
+    public bool roll { get; private set; }
+    public bool jump { get; private set; }
+    public bool run { get; private set; }
+    public bool normaAttack { get; private set; }
+    public bool heavyAttack { get; private set; }
+    public float horizontal { get; private set; }
+    public float vertical { get; private set; }
+   
+    //Ссылка на параметры анимаций
     public AnimationsParametorsModel animationsParametorsModel;
 
+    //Конструктор
     public AnimController(GameObject player)
     {
-        this.player = player;
-        playerAttackModel = new PlayerAttackModel();
+        this.player = player;      
         animationsParametorsModel = new AnimationsParametorsModel();
         _animator = player.GetComponent<Animator>();
     }
@@ -34,11 +37,15 @@ public class AnimController : BaseController
         PlayAnimations();
     }
 
-    #region Метод Проигрывания Анимаций
+    //Метод Проигрывания Анимаций
     private void PlayAnimations()
     {
+        //Горизонтальный ввод клавиатуры
         _animator.SetFloat(animationsParametorsModel.horizontal, horizontal);
+
+        //Вертикальный ввод клавиатуры
         _animator.SetFloat(animationsParametorsModel.vertical, vertical);
+
         //Проверка на Прыжок 
         if (jump)
         {
@@ -56,8 +63,9 @@ public class AnimController : BaseController
         }
         else
         {
-            _animator.SetBool(animationsParametorsModel.isJumping, false);
+            _animator.SetBool(animationsParametorsModel.isRuning, false);
         }
+        
 
         //Проверка на Кувырок 
         if (roll)
@@ -73,6 +81,7 @@ public class AnimController : BaseController
         if (normaAttack)
         {
             _animator.SetBool(animationsParametorsModel.isNormalAttack, true);
+            
         }
         else
         {
@@ -82,19 +91,22 @@ public class AnimController : BaseController
         //Проверка на Тяжелый удар
         if (heavyAttack)
         {
+            _animator.SetBool(animationsParametorsModel.isHeavyAttack, true);
+        }
+        else
+        {
             _animator.SetBool(animationsParametorsModel.isHeavyAttack, false);
         }
     }
-    #endregion
 
     //Метод проверки состояний различных состояний игрока
     private void GetInputs()
     {
         horizontal = StartScript.GetStartScript.inputController.ForwardBackward;
         vertical = StartScript.GetStartScript.inputController.LeftRight;
-        jump = StartScript.GetStartScript.inputController.Jump;
-        run = StartScript.GetStartScript.inputController.Run;
-        roll = StartScript.GetStartScript.inputController.Roll;
+        jump = StartScript.GetStartScript.staminaController.CanJump;
+        run = StartScript.GetStartScript.staminaController.CanRun;
+        roll = StartScript.GetStartScript.staminaController.CanRoll;
         normaAttack = StartScript.GetStartScript.staminaController.CanNormalAttack;
         heavyAttack = StartScript.GetStartScript.staminaController.CanHeavyAttack;
     }

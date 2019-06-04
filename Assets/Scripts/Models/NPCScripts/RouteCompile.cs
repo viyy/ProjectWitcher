@@ -7,21 +7,21 @@ using UnityEngine;
 /// </summary>
 public class RouteCompile : MonoBehaviour
 {
-    int lastNum;
+    int lastNum;//последняя добавленная точка(устаревшее)
     float X;
     float Z;
 
     public Vector3[] Compile(Vector3 startPosition, float range)
     {
-        int length = Random.Range(4, 10);
+        int length = Random.Range(4, 10);//генерация размера маршрута
         Debug.Log("Length: " + length);
         Vector3[] route = new Vector3[length];
         for(int i = 0; i < length; i++)
         {
             if(i == 0)
             {
-                X = Random.Range(startPosition.x - range, startPosition.x + range);
-                Z = Mathf.Sqrt(Mathf.Pow(range, 2) - Mathf.Pow(X, 2));
+                X = Random.Range(startPosition.x - range, startPosition.x + range);//генерация случайной координаты Х в заданной области
+                Z = Mathf.Sqrt(Mathf.Pow(range, 2) - Mathf.Pow(X, 2));//рассчет координаты Z исходя из значения координаты Х
 
             }
             else if(i%2 == 0)

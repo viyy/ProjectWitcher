@@ -10,16 +10,16 @@ using UnityEditor;
 [RequireComponent(typeof(EnemyDie))]
 public class EnemyController : MonoBehaviour
 {
-    bool alive;
+    bool alive; //жив ли враг
     bool onPatrol; //Находится ли enemy в патруле
     bool inChase; // Взаимодействует ли с ним игрок
     bool onIdle; // Бездействует ли enemy
-    Vector3 startPosition;
-    float patrolRange;
-    Vector3[] route; //
-    int patrolChance = 5;
-    int idleChance = 5;
-    GameObject player;
+    Vector3 startPosition; //стартовая позиция для генерации зоны патрулирования
+    float patrolRange; //радиус зоны патрулирования
+    Vector3[] route; //маршрут точек для патруля
+    int patrolChance = 5;//шанс выбора режима патрулирования
+    int idleChance = 5;//шанс выбора режима бездействия
+    GameObject player;//игрок
 
     MeshRenderer mesh;
 
@@ -29,12 +29,18 @@ public class EnemyController : MonoBehaviour
         onPatrol = false;
         onIdle = false;
         inChase = false;
-        startPosition = transform.position;
+        startPosition = transform.position; //загружаем в стартовую позицию начальное положение врага
         patrolRange = 15;
+        ///<summary>
+        ///подписка на события
+        /// </summary>
         NPCPatrolController.PatrolEvent += PatrolWaiter;
         NPCIdleController.IdleEvent += IdleWaiter;
         EnemyChase.ChaseEvent += FinishChase;
         EnemyDie.DieEvent += DestroyUnit;
+        ///<summary>
+        ///находим объект игрока
+        /// </summary>
         player = GameObject.FindGameObjectWithTag("Player");
         mesh = GetComponent<MeshRenderer>();
     }
@@ -43,6 +49,9 @@ public class EnemyController : MonoBehaviour
     {
         if (alive)
         {
+            ///<summary>
+            ///Проверка состояния деятельности врага
+            /// </summary>
             if (inChase)
             {
                 DisableAll();
@@ -78,19 +87,27 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            GetComponent<EnemyChase>().StopChase();
-            GetComponent<CapsuleCollider>().enabled = false;
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-            GetComponent<EnemyDie>().Die(mesh);
+            GetComponent<EnemyChase>().StopChase();//останавливаем погоню
+            GetComponent<CapsuleCollider>().enabled = false;//выключаем коллайдер
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;//замораживаем перемещения и повороты
+            GetComponent<EnemyDie>().Die(mesh);//запускаем событие смерти
         }
     }
 
+    /// <summary>
+    /// Отключаем состояния бездействия и патрулирования для начала погони
+    /// </summary>
     private void DisableAll()
     {
         onIdle = false;
         onPatrol = false;
     }
 
+
+    /// <summary>
+    /// запускаем погоню, если игрок попал в зону триггера
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == player)
@@ -98,6 +115,11 @@ public class EnemyController : MonoBehaviour
             inChase = true;
         }
     }
+
+    /// <summary>
+    /// Убиваем врага, если он столкнулся с игроком
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject == player)

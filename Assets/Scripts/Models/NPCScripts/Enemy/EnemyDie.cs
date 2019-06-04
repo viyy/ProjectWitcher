@@ -11,7 +11,7 @@ public class EnemyDie : MonoBehaviour
 
     Animator dieAnim;
     float invisibleSwitch;
-    Coroutine invis;
+    Coroutine invis;//карутина для плавного изменения внешнего состояния врага
 
     private void Awake()
     {
@@ -28,6 +28,10 @@ public class EnemyDie : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Метод демонстрации смерти врага
+    /// </summary>
+    /// <param name="mesh"></param>
     public void Die(MeshRenderer mesh)
     {
         mesh.material.color = Color.red;

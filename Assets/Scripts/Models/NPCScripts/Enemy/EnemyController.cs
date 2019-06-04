@@ -7,6 +7,7 @@ using UnityEditor;
 [RequireComponent(typeof(NPCMove))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EnemyChase))]
+[RequireComponent(typeof(EnemyDie))]
 public class EnemyController : MonoBehaviour
 {
     bool alive;

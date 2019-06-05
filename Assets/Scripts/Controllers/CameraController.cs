@@ -27,9 +27,8 @@ namespace Assets.Scripts.Controllers
         //Положение игрока
         private Transform Player;
 
+        //Позиция камеры при прицеливании
         private Transform AimPosition;
-
-        private Transform PlayerHand;
 
         //Угол вращения камеры по оси Y.
         private float RotationY = 0;
@@ -44,9 +43,10 @@ namespace Assets.Scripts.Controllers
         private Vector3 Offset;
 
         //Расстояние до камеры с препятствием.
-        private Vector3 ObstacleOffset;
+        private Vector3 ObstacleCameraPosition;
 
-        private Vector3 AimOffset;
+        //Позиция камеры без препятствий
+        private Vector3 StandartCameraPosition;
 
         //Стартовое расстояние до камеры.
         private Vector3 StartCameraDistance;
@@ -54,7 +54,11 @@ namespace Assets.Scripts.Controllers
         //Флаг для наличия препятствий
         private bool CameraObstacle;
 
+        //Флаг для прицеливания
         private bool IsAiming;
+
+        //Флаг для возвращение камеры в стандартное положение за спину персонажа
+        private bool BackToStandartCameraProsition = false;
 
         //Луч для проверки препятствия перед камерой.
         private RaycastHit Ray;
@@ -84,8 +88,6 @@ namespace Assets.Scripts.Controllers
         {
             AimPosition = GameObject.FindGameObjectWithTag("AimPosition").transform;
 
-            PlayerHand = GameObject.FindGameObjectWithTag("PlayerHand").transform;
-
             //Получаем модель для камеры.
             this.CameraModel = CameraModel;
 
@@ -100,32 +102,38 @@ namespace Assets.Scripts.Controllers
 
             //Задаем начальное расстояние между камерой и игроком
             Offset = Player.transform.position - StartCameraDistance;
-            
         }
         
-        public override void ControllerUpdate()
-        {
-
-        }
-
+        /// <summary>
+        /// Update контроллера
+        /// </summary>
         public override void ControllerLateUpdate()
         {
-            AimOffset = Player.transform.position - AimPosition.position;
-
             GetInputs();
 
             //Ограничиваем движение камеры по оси X
             RotationX = (IsAiming) ? Mathf.Clamp(RotationX, -45, 45) : Mathf.Clamp(RotationX, 0, 70);
-
-            //Преобразуем угол Еулера в кватернион.
-            Rotation = Quaternion.Euler(RotationX, RotationY, 0);
-
+            
             //Проверяем коллизию
             if (!IsAiming)
             {
                 CollisionCheck(Player.transform.position, Rotation);
+
+                if(!BackToStandartCameraProsition)
+                {
+                    //Преобразуем угол Еулера в кватернион.
+                    Rotation = Quaternion.Euler(RotationX, RotationY, 0);
+                }
             }
-            
+            else
+            {
+                //Преобразуем угол Еулера в кватернион.
+                Rotation = Quaternion.Euler(RotationX, Player.eulerAngles.y, 0);
+            }
+
+            //Получаем нужное положение для камеры
+            StandartCameraPosition = Player.transform.position - (Rotation * Offset);
+
             //Двигаем камеру
             CameraMove(Rotation);
 
@@ -142,14 +150,27 @@ namespace Assets.Scripts.Controllers
         /// <param name="inputController">Контроллер ввода</param>
         private void GetInputs()
         {
+            //Проверяем нажата ли кнопка прицеливания
             IsAiming = inputController.Aim;
 
             //Получаем значения колесика мыши
             Zoom = inputController.Zoom;
 
-            //Получаем значения движения мыши по осям X и Y
-            RotationY += inputController.RotationY * (CameraModel.AxisX_MouseSensivity * 2);
+            //Получаем значения движения мыши по оси X
             RotationX += inputController.RotationX * (CameraModel.AxisY_MouseSensivity * 2);
+
+            if (!BackToStandartCameraProsition)
+            {
+                //Получаем значения движения мыши по оси Y
+                RotationY += inputController.RotationY * (CameraModel.AxisX_MouseSensivity * 2);
+            }
+            else
+            {
+                RotationY = Camera.transform.eulerAngles.y;
+                
+            }
+            
+
         }
 
 
@@ -163,7 +184,7 @@ namespace Assets.Scripts.Controllers
             {
                 case true:
 
-                    Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleOffset, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
+                    Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleCameraPosition, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
                     
                     break;
 
@@ -171,16 +192,18 @@ namespace Assets.Scripts.Controllers
                     
                     if (!IsAiming)
                     {
-                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, Player.transform.position - (Rotation * Offset), CameraModel.CameraReturnSpeed * Time.deltaTime);
-
-                        PlayerHand.rotation = Quaternion.Euler(Player.eulerAngles.x, Player.eulerAngles.y, 0);
+                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, StandartCameraPosition, CameraModel.CameraReturnSpeed * Time.deltaTime);
+                        if(BackToStandartCameraProsition & Vector3.Distance(Camera.transform.position, StandartCameraPosition) < 0.2f)
+                        {
+                            BackToStandartCameraProsition = false;
+                        }
                     }
+
                     else
                     {
-                        Camera.transform.rotation = Player.transform.rotation * Quaternion.Euler(RotationX, 0, 0);
+                        Camera.transform.rotation = Player.transform.rotation *  Quaternion.Euler(RotationX, 0, 0);
                         Camera.transform.position = Vector3.Lerp(Camera.transform.position, AimPosition.position, CameraModel.CameraReturnSpeed * Time.deltaTime);
-
-                        PlayerHand.rotation = Quaternion.Euler(RotationX, Player.eulerAngles.y, 0);
+                        BackToStandartCameraProsition = true;
                     }
                     
                     break;
@@ -205,9 +228,9 @@ namespace Assets.Scripts.Controllers
                 CameraObstacle = true;
 
                 //Отдялаем новую позицию камеры от препятствия.
-                ObstacleOffset = Ray.point + (rotation * (Ray.transform.forward * CameraModel.DistanceFromObstacle));
+                ObstacleCameraPosition = Ray.point + (rotation * (Ray.transform.forward * CameraModel.DistanceFromObstacle));
 
-                Debug.DrawLine(Player.transform.position, ObstacleOffset, Color.red);
+                Debug.DrawLine(Player.transform.position, ObstacleCameraPosition, Color.red);
 
                 return;
             }
@@ -241,6 +264,11 @@ namespace Assets.Scripts.Controllers
                         break;
                 }
             }
+        }
+
+        public override void ControllerUpdate()
+        {
+
         }
     }
 }

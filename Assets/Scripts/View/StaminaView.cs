@@ -11,7 +11,7 @@ namespace Assets.Scripts.Views
         [SerializeField] private Image _scaleImage;
         [SerializeField] private float _currentStaminaPercent;
         [SerializeField] private float _currentStamina;
-        [SerializeField] private StaminaModel staminaModel;
+        private StaminaModel staminaModel;
         
 
         void Awake()

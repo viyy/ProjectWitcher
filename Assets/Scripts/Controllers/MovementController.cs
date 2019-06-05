@@ -164,16 +164,17 @@ namespace Assets.Scripts.Controllers
         private void JumpAndGravity()
         {
             //Если игрок стоит на поверхности то можем прыгать.
-            if (IsGrounded)
+            if(IsGrounded)
             {
-                if (StartScript.GetStartScript.staminaController.CanJump)
-                {
-                    Y = PlayerMovement.JumpHeight;
-                }
-                else
-                {
-                    Y = PlayerMovement.MinimumFall;
-                }
+                Y = StartScript.GetStartScript.staminaController.CanJump ? PlayerMovement.JumpHeight : PlayerMovement.MinimumFall;
+                //if (StartScript.GetStartScript.staminaController.CanJump)
+                //{
+                //    Y = PlayerMovement.JumpHeight;
+                //}
+                //else
+                //{
+                //    Y = PlayerMovement.MinimumFall;
+                //}
             }
 
             //Если игрок не стоит на поверхности, то проверяем соприкасается ли коллайдер персонажа с коллайдером под ногами.
@@ -221,8 +222,12 @@ namespace Assets.Scripts.Controllers
             {
                 case true:
 
-                    //Задаем направление вращения игрока как вращение камеры.
-                    Player.rotation = Camera.rotation;
+                    //Задаем направление вращения игрока как вращение камеры, если при прицеливанни игрок развернут в другую сторону
+                    if(Quaternion.Dot(Player.rotation, Camera.rotation) < 0.9f)
+                    {
+                        Player.rotation = Camera.rotation;
+                    }
+                    
 
                     if (!IsGrounded)
                     {
@@ -282,11 +287,11 @@ namespace Assets.Scripts.Controllers
             RayHit = new RaycastHit();
 
             //Делаем луч видимым
-            Debug.DrawRay(Player.transform.position, (-Player.transform.up * PlayerMovement.GroundRayDistance), Color.yellow);
+            Debug.DrawRay(Player.transform.position + CharacterController.center, (-CharacterController.transform.up * ((CharacterController.height / 2) + PlayerMovement.GroundRayDistanceOffset)), Color.yellow);
 
-            if (Y < 0 & Physics.Raycast(Player.transform.position, Vector3.down, out RayHit))
+            if (Y < 0 & Physics.Raycast(Player.transform.position + CharacterController.center, Vector3.down, out RayHit))
             {
-                IsGrounded = RayHit.distance < PlayerMovement.GroundRayDistance;
+                IsGrounded = RayHit.distance < ((CharacterController.height / 2) + PlayerMovement.GroundRayDistanceOffset);
             }
             else
             {

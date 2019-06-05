@@ -17,9 +17,9 @@ namespace Assets.Scripts.Models
 
         public float JumpHeight = 10f;
 
-        public float GroundRayDistance = 0.75f;
+        public float GroundRayDistanceOffset = 0.3f;
 
-        public float MinimumFall = -1.0f;
+        public float MinimumFall = -3.0f;
 
         public float TerminalFall = -15.0f;
 

@@ -8,8 +8,9 @@ using UnityEditor;
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EnemyChase))]
 [RequireComponent(typeof(EnemyDie))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, ISetDamage
 {
+    float hp;
     bool alive; //жив ли враг
     bool onPatrol; //Находится ли enemy в патруле
     bool inChase; // Взаимодействует ли с ним игрок
@@ -25,6 +26,7 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
+        hp = 100;
         alive = true;
         onPatrol = false;
         onIdle = false;
@@ -123,8 +125,22 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.gameObject == player)
         {
+            
+        }
+    }
+
+    public void ApplyDamage(float damage)
+    {
+        if(hp > damage)
+        {
+            hp = hp - damage;
+        }
+        else
+        {
+            hp = 0;
             alive = false;
         }
+        
     }
     //private void OnTriggerExit(Collider other)
     //{

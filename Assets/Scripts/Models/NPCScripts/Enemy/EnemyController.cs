@@ -8,14 +8,15 @@ using UnityEditor;
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(EnemyChase))]
 [RequireComponent(typeof(EnemyDie))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, ISetDamage
 {
+    float hp;
     bool alive; //жив ли враг
     bool onPatrol; //Находится ли enemy в патруле
     bool inChase; // Взаимодействует ли с ним игрок
     bool onIdle; // Бездействует ли enemy
     Vector3 startPosition; //стартовая позиция для генерации зоны патрулирования
-    float patrolRange; //радиус зоны патрулирования
+    public float patrolRange = 15f; //радиус зоны патрулирования
     Vector3[] route; //маршрут точек для патруля
     int patrolChance = 5;//шанс выбора режима патрулирования
     int idleChance = 5;//шанс выбора режима бездействия
@@ -25,12 +26,12 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
+        hp = 100;
         alive = true;
         onPatrol = false;
         onIdle = false;
         inChase = false;
         startPosition = transform.position; //загружаем в стартовую позицию начальное положение врага
-        patrolRange = 15;
         ///<summary>
         ///подписка на события
         /// </summary>
@@ -124,8 +125,22 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.gameObject == player)
         {
+            
+        }
+    }
+
+    public void ApplyDamage(float damage)
+    {
+        if(hp > damage)
+        {
+            hp = hp - damage;
+        }
+        else
+        {
+            hp = 0;
             alive = false;
         }
+        
     }
     //private void OnTriggerExit(Collider other)
     //{

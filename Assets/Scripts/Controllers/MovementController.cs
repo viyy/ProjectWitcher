@@ -235,7 +235,7 @@ namespace Assets.Scripts.Controllers
                     {
                         Player.rotation *= Quaternion.Euler(0, inputController.RotationY * PlayerMovement.AimRotateSpeed * Time.deltaTime, 0);
                     }
-
+                    
                     break;
 
                 case false:

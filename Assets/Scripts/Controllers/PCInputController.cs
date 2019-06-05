@@ -38,11 +38,25 @@ namespace Assets.Scripts.Controllers
 
         public bool LeftClick { get; private set; }
 
+        public bool HeavyAttackClick { get; private set; }
+
         public float RotationY { get; private set; }
 
         public float RotationX { get; private set; }
 
         public float Zoom { get; private set; }
+
+        #endregion
+
+        #region Таймер Тяжелой Атаки
+
+        public float timeToDoubleLeftClick = 1f;
+
+        public float countTimer = 0f;
+
+        public float countLeftClick = 0f;
+
+        public bool isLeftClickUp = false;
 
         #endregion
 
@@ -57,6 +71,33 @@ namespace Assets.Scripts.Controllers
         
         public override void ControllerUpdate()
         {
+            #region Проверка на Двойной клик ЛКМ
+
+            if (Input.GetMouseButtonUp((int)PCInputModel.LeftMouseButton))
+            {
+                isLeftClickUp = true;
+                countLeftClick++;                
+            }
+
+            if (isLeftClickUp)
+            {
+                countTimer += Time.deltaTime;
+                if(countTimer >= timeToDoubleLeftClick)
+                {
+                    countTimer = 0;
+                    isLeftClickUp = false;
+                    countLeftClick = 0;
+                    HeavyAttackClick = false;
+                }               
+            }
+
+            if (countLeftClick >= 2)
+            {
+                HeavyAttackClick = true;
+            }
+
+            #endregion
+
             ForwardBackward = Input.GetAxis("Horizontal");
 
             LeftRight = Input.GetAxis("Vertical");
@@ -69,9 +110,9 @@ namespace Assets.Scripts.Controllers
 
             RotationX = -Input.GetAxis("Mouse Y");
 
-            Aim = Input.GetMouseButton((int)PCInputModel.AimMouseButton);
+            Aim = Input.GetMouseButton((int)PCInputModel.AimMouseButton);            
 
-            LeftClick = Input.GetMouseButton((int)PCInputModel.LeftMouseButton);
+            LeftClick = Input.GetMouseButtonDown((int)PCInputModel.LeftMouseButton);
 
             Zoom = Input.GetAxis("Mouse ScrollWheel");
 

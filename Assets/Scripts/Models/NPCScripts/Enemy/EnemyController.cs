@@ -140,7 +140,7 @@ public class EnemyController : MonoBehaviour, ISetDamage
             hp = 0;
             alive = false;
         }
-        
+        Debug.Log(hp);
     }
     //private void OnTriggerExit(Collider other)
     //{

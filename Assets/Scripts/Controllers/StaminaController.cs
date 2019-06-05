@@ -67,7 +67,7 @@ namespace Assets.Scripts.Controllers
             JumpPress = InputController.Jump;
             RollPress = InputController.Roll;
             NormalAttackPress = InputController.LeftClick;
-            // Реализовать тяжелую атаку !!!!!!!!!!!!!!!!!!!!! HeavyAttackPress = InputController. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            HeavyAttackPress = InputController.HeavyAttackClick;
             IsStanding = movementController.IsStanding;
             IsWalking = movementController.IsWalking;
         }
@@ -152,7 +152,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void NormalAttackStaminaDrain()
         {
-            CanNormalAttack = ((NormalAttackPress & movementController.IsGrounded) & Stamina > staminaModel.StaminaNormalAttackCoast);
+            CanNormalAttack = ((NormalAttackPress) & Stamina > staminaModel.StaminaNormalAttackCoast);
 
             if (CanNormalAttack)
             {
@@ -165,7 +165,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void HeavyAttackStaminaDrain()
         {
-            CanHeavyAttack = ((HeavyAttackPress & movementController.IsGrounded) & Stamina > staminaModel.StaminaNormalAttackCoast);
+            CanHeavyAttack = ((HeavyAttackPress) & Stamina > staminaModel.StaminaNormalAttackCoast);
 
             if (CanHeavyAttack)
             {

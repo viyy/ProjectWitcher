@@ -10,7 +10,7 @@ using UnityEditor;
 [RequireComponent(typeof(EnemyDie))]
 public class EnemyController : MonoBehaviour, ISetDamage
 {
-    float hp;
+    public float hp;
     bool alive; //жив ли враг
     bool onPatrol; //Находится ли enemy в патруле
     bool inChase; // Взаимодействует ли с ним игрок
@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour, ISetDamage
         NPCPatrolController.PatrolEvent += PatrolWaiter;
         NPCIdleController.IdleEvent += IdleWaiter;
         EnemyChase.ChaseEvent += FinishChase;
-        EnemyDie.DieEvent += DestroyUnit;
+        
         ///<summary>
         ///находим объект игрока
         /// </summary>
@@ -88,6 +88,7 @@ public class EnemyController : MonoBehaviour, ISetDamage
         }
         else
         {
+            EnemyDie.DieEvent += DestroyUnit;
             GetComponent<EnemyChase>().StopChase();//останавливаем погоню
             GetComponent<CapsuleCollider>().enabled = false;//выключаем коллайдер
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;//замораживаем перемещения и повороты

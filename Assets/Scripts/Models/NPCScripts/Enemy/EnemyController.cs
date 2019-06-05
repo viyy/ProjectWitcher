@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
     bool inChase; // Взаимодействует ли с ним игрок
     bool onIdle; // Бездействует ли enemy
     Vector3 startPosition; //стартовая позиция для генерации зоны патрулирования
-    float patrolRange; //радиус зоны патрулирования
+    public float patrolRange = 15f; //радиус зоны патрулирования
     Vector3[] route; //маршрут точек для патруля
     int patrolChance = 5;//шанс выбора режима патрулирования
     int idleChance = 5;//шанс выбора режима бездействия
@@ -30,7 +30,6 @@ public class EnemyController : MonoBehaviour
         onIdle = false;
         inChase = false;
         startPosition = transform.position; //загружаем в стартовую позицию начальное положение врага
-        patrolRange = 15;
         ///<summary>
         ///подписка на события
         /// </summary>

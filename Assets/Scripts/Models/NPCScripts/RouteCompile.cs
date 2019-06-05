@@ -40,16 +40,24 @@ public class RouteCompile : MonoBehaviour
             }
             else
             {
-                float delta = Mathf.Abs(startPosition.x) - Mathf.Abs(X);
+                float Xdelta = Mathf.Abs(startPosition.x) - Mathf.Abs(X);
                 if(X < startPosition.x)
                 {
-                    X = startPosition.x + delta;
+                    X = startPosition.x + Xdelta;
                 }
                 else
                 {
-                    X = startPosition.x - delta;
+                    X = startPosition.x - Xdelta;
                 }
-                Z = startPosition.z + Mathf.Sqrt(Mathf.Pow(range, 2) - Mathf.Pow(X - startPosition.x, 2));//рассчет координаты Z исходя из значения координаты Х
+                float Zdelta = Mathf.Abs(startPosition.z) - Mathf.Abs(Z);
+                if (Z < startPosition.z)
+                {
+                    Z = startPosition.z + Zdelta;
+                }
+                else
+                {
+                    Z = startPosition.z - Zdelta;
+                }
                 Y = Terrain.activeTerrain.SampleHeight(new Vector3(X, 0, Z));
             }
 

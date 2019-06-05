@@ -89,6 +89,9 @@ namespace Assets.Scripts.Controllers
             RunStaminaDrain();
             JumpStaminaDrain();
             RollStaminaDrain();
+            NormalAttackStaminaDrain();
+            HeavyAttackStaminaDrain();
+
 
             //Ограничиваем значения стамины
             Stamina = Mathf.Clamp(Stamina, 0, StaminaMaximum);

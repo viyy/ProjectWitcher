@@ -21,11 +21,13 @@ namespace Assets.Scripts.Models
         public float StaminaNormalAttackCoast = 10f;
 
         public float StaminaHeavyAttackCoast = 30f;
-
+        
         // перенести в модель жизней.
         public void TakeDamage(float damage)
         {
             Debug.Log($"I was hitted for {damage} damage");
         }
+
+        
     }
 }

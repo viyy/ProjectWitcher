@@ -738,36 +738,6 @@ Transform:
   m_Father: {fileID: 8369212862451988095}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3229001777818357214
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3229001777818357185}
-  m_Layer: 0
-  m_Name: PlayerHand
-  m_TagString: PlayerHand
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3229001777818357185
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3229001777818357214}
-  m_LocalRotation: {x: -0.0127967205, y: -0.019268155, z: 0.011494729, w: 0.99966645}
-  m_LocalPosition: {x: 0.4671631, y: 1.6330757, z: -0.20727539}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7617008419332629293}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 38.905003, y: 3.9680002, z: 57.077003}
 --- !u!1 &3229001778003585906
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +766,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7617008419332629293}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
 --- !u!1 &3382938775156358189
 GameObject:
@@ -1946,8 +1916,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7617008419332629293}
   - component: {fileID: 522152631707078231}
-  - component: {fileID: 3229001778672601144}
-  - component: {fileID: 3229001778672601145}
   - component: {fileID: 3229001778672601149}
   m_Layer: 0
   m_Name: paladinGeneric
@@ -1972,7 +1940,6 @@ Transform:
   - {fileID: 3957245262426568433}
   - {fileID: 3120755904369776571}
   - {fileID: 2746789910352728160}
-  - {fileID: 3229001777818357185}
   - {fileID: 3229001778003585909}
   - {fileID: 2087694121148946052}
   m_Father: {fileID: 0}
@@ -1997,45 +1964,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!143 &3229001778672601144
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6912556022765572414}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.79, z: 0}
---- !u!114 &3229001778672601145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6912556022765572414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70ff57860a5c88345894430ca1817e52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Stamina: 100
-  StaminaMaximum: 100
-  StaminaRunCoast: 10
-  StaminaJumpCoast: 20
-  StaminaRollCoast: 30
-  StaminaStandRegenRate: 25
-  StaminaWalkRegenRate: 5
-  StaminaNormalAttackCoast: 10
-  StaminaHeavyAttackCoast: 30
 --- !u!114 &3229001778672601149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2655,5 +2583,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7617008419332629293}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

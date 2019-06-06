@@ -43,8 +43,6 @@ Thumbs.db
 .vs/ProjectWitcher/v15/Server/sqlite3/storage.ide-shm
 .vs/ProjectWitcher/v15/Server/sqlite3/storage.ide-wal
 *.ide-wal
-Assets/Animation.meta
-Assets/AnimationControllers.meta
 Assets/OldScripts.meta
 Assets/OldScripts/CharacterScripts.meta
 Assets/OldScripts/CharacterScripts/Jump.cs

@@ -53,13 +53,13 @@ public class SwordStartModel : MonoBehaviour
         isHeavyAttack = StartScript.GetStartScript.animController.heavyAttack;
 
         //Если производится Обычная атака то
-        if (isAttack & isNormalAttack)
+        if (isAttack)
         {
             //Устанавливаем обычный урон
             currentDamage = damageNormal;
         }
         //Если производится Тяжелая атака то
-        if (isAttack & isHeavyAttack)
+        if (isAttack)
         {
             //Устанавливаем тяжелый урон
             currentDamage = damageHeavy;

@@ -81,7 +81,7 @@ public class AnimController : BaseController
         if (normaAttack)
         {
             _animator.SetBool(animationsParametorsModel.isNormalAttack, true);
-            
+            Debug.Log("NormalAttack");
         }
         else
         {
@@ -92,6 +92,7 @@ public class AnimController : BaseController
         if (heavyAttack)
         {
             _animator.SetBool(animationsParametorsModel.isHeavyAttack, true);
+            Debug.Log("HeavyAttack");
         }
         else
         {

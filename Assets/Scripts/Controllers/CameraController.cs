@@ -173,7 +173,6 @@ namespace Assets.Scripts.Controllers
 
         }
 
-
         /// Метод для передвижения камеры
         /// </summary>
         /// <param name="CameraObstacle">Флаг препятствия</param>
@@ -228,7 +227,7 @@ namespace Assets.Scripts.Controllers
                 CameraObstacle = true;
 
                 //Отдялаем новую позицию камеры от препятствия.
-                ObstacleCameraPosition = Ray.point + (rotation * (Ray.transform.forward * CameraModel.DistanceFromObstacle));
+                ObstacleCameraPosition = Ray.point + (rotation * (Vector3.forward * CameraModel.DistanceFromObstacle));
 
                 Debug.DrawLine(Player.transform.position, ObstacleCameraPosition, Color.red);
 

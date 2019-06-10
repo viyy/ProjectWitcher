@@ -26,5 +26,7 @@ namespace Assets.Scripts.Models
         public float RollDistance = 5f;
 
         public float RollSpeed = 5f;
+
+        public float DefenceSpeed = 2f;
     }
 }

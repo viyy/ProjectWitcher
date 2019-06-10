@@ -1,9 +1,4 @@
 ﻿using Assets.Scripts.BaseScripts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Models
@@ -18,13 +13,14 @@ namespace Assets.Scripts.Models
 
         public KeyCode RunButton { get; private set; } = KeyCode.LeftShift;
 
-        public MouseButtons AimMouseButton { get; private set; } = MouseButtons.Right;
+        public KeyCode DefenceButton { get; private set; } = KeyCode.LeftAlt;
 
         public KeyCode JumpButton { get; private set; } = KeyCode.Space;
 
         public KeyCode RollButton { get; private set; } = KeyCode.LeftControl;
 
-        public MouseButtons LeftMouseButton { get; private set; } = MouseButtons.Left;
+        public MouseButtons AimMouseButton { get; private set; } = MouseButtons.Right;
 
+        public MouseButtons LeftMouseButton { get; private set; } = MouseButtons.Left;
     }
 }

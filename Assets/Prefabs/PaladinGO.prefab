@@ -68,6 +68,7 @@ GameObject:
   - component: {fileID: 3100970014338540123}
   - component: {fileID: 3100970014338540120}
   - component: {fileID: 3100970014338540121}
+  - component: {fileID: 6429733435374138919}
   m_Layer: 8
   m_Name: PaladinGO
   m_TagString: Player
@@ -129,6 +130,21 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: -0.15, y: -0.63, z: 0}
+--- !u!114 &6429733435374138919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100970014338540118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c43f3110902851418d7fbd44a725a01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 80
+  healthMaximum: 100
+  healthRegenerationRate: 3
 --- !u!1001 &560526417008865504
 PrefabInstance:
   m_ObjectHideFlags: 0

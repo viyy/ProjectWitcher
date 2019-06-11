@@ -3,7 +3,7 @@ using Assets.Scripts.Interfaces;
 
 namespace Assets.Scripts.Models
 {
-    public class StaminaModel:MonoBehaviour, IDamageable
+    public class StaminaModel:MonoBehaviour
     {
         public float Stamina = 100;
         public float StaminaMaximum = 100;
@@ -22,11 +22,7 @@ namespace Assets.Scripts.Models
 
         public float StaminaHeavyAttackCoast = 30f;
         
-        // перенести в модель жизней.
-        public void TakeDamage(float damage)
-        {
-            Debug.Log($"I was hitted for {damage} damage");
-        }
+       
 
         
     }

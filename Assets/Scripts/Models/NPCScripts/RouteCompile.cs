@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Класс-генератор маршрута из пула точек
 /// </summary>
-public class RouteCompile : MonoBehaviour
+public class RouteCompile
 {
     int lastNum;//последняя добавленная точка(устаревшее)
     float X;
@@ -62,7 +62,6 @@ public class RouteCompile : MonoBehaviour
             }
 
             route[i] = new Vector3(X, Y, Z);
-            Debug.Log(route[i]);
 
         }
         Debug.Log("Route created");

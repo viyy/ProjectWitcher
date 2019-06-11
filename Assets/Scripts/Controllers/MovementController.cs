@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Scripts.BaseScripts;
+﻿using Assets.Scripts.BaseScripts;
 using UnityEngine;
 using Assets.Scripts.Models;
 
@@ -41,6 +36,7 @@ namespace Assets.Scripts.Controllers
         public bool IsRolling { get; private set; }
         public bool IsWalking { get; private set; }
         public bool IsAiming { get; private set; }
+        public bool IsDefencing { get; private set; }
 
         private bool SpecialMove = false;
 
@@ -79,6 +75,9 @@ namespace Assets.Scripts.Controllers
         private float RollDistance;
 
         private float RotationY;
+
+        //Переменная для задания скорости
+        private float Speed;
 
         /// <summary>
         /// 
@@ -128,8 +127,6 @@ namespace Assets.Scripts.Controllers
 
             //Передвижение
             CharacterMove();
-            
-            
         }
 
         public override void ControllerLateUpdate()
@@ -143,6 +140,7 @@ namespace Assets.Scripts.Controllers
         /// <param name="inputController">Контроллер ввода</param>
         private void GetInputs()
         {
+            Speed = PlayerMovement.Speed;
             IsAiming = StartScript.GetStartScript.inputController.Aim;
 
             RotationY = StartScript.GetStartScript.cameraController.YRotation;
@@ -151,11 +149,15 @@ namespace Assets.Scripts.Controllers
 
             IsRolling = StartScript.GetStartScript.staminaController.CanRoll;
 
-            // Check to see if the A or D key are being pressed
-            X = Input.GetAxis("Horizontal") * ((IsRunning & !IsAiming) ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
+            IsDefencing = StartScript.GetStartScript.inputController.Defence;
 
+            if (IsRunning & !IsAiming) Speed = PlayerMovement.RunSpeed;
+            if (IsDefencing & !IsAiming) Speed = PlayerMovement.DefenceSpeed;
+
+            // Check to see if the A or D key are being pressed
+            X = Input.GetAxis("Horizontal") * Speed;
             // Check to see if the W or S key is being pressed.  
-            Z = Input.GetAxis("Vertical") * ((IsRunning & !IsAiming) ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
+            Z = Input.GetAxis("Vertical") * Speed;
         }
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace Assets.Scripts.Controllers
             }
 
             //Ограничиваем скорость движения по диагонали.
-            Movement = Vector3.ClampMagnitude(Movement, (IsRunning & !IsAiming) ? PlayerMovement.RunSpeed : PlayerMovement.Speed);
+            Movement = Vector3.ClampMagnitude(Movement, Speed);
 
             //Задаем угол Эулера для камеры как координату оси Y, z и x оставляем 0.
             Camera.eulerAngles = new Vector3(0, Camera.eulerAngles.y, 0);

@@ -23,7 +23,9 @@ namespace Assets.Scripts.BaseScripts
 
         public AnimController animController { get; private set; }
 
-        public EnemyAttackController enemyAttackController { get; private set; }
+        //public EnemyAttackController enemyAttackController { get; private set; }
+        
+        public HealthController healthController { get; private set; }
 
         private List<BaseController> AllControllers = new List<BaseController>(6);
 
@@ -38,7 +40,6 @@ namespace Assets.Scripts.BaseScripts
             GameObject Player = GameObject.FindGameObjectWithTag("Player");
             Transform CameraCenter = GameObject.FindGameObjectWithTag("CameraCenter").transform;
             GameObject PlayerAnimator = GameObject.FindGameObjectWithTag("PlayerAnimator");
-            TargetDetector targetDetector = GameObject.FindGameObjectWithTag("Enemy").GetComponent<TargetDetector>();
 
             //Создаем контроллеры
             inputController = new PCInputController();
@@ -46,7 +47,9 @@ namespace Assets.Scripts.BaseScripts
             movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
             staminaController = new StaminaController(ref Player.GetComponent<StaminaModel>().Stamina, Player.GetComponent<StaminaModel>(), inputController, movementController);
             animController = new AnimController(PlayerAnimator);
-            enemyAttackController = new EnemyAttackController(targetDetector);
+           // enemyAttackController = new EnemyAttackController(targetDetector);
+            healthController = new HealthController(ref Player.GetComponent<HealthModel>().health, Player.GetComponent<HealthModel>());
+            
 
 
             #region Добавляем контроллеры в коллекцию
@@ -56,7 +59,8 @@ namespace Assets.Scripts.BaseScripts
             AllControllers.Add(movementController);
             AllControllers.Add(staminaController);
             AllControllers.Add(animController);
-            AllControllers.Add(enemyAttackController);
+           // AllControllers.Add(enemyAttackController);
+            AllControllers.Add(healthController);
 
             #endregion
         }

@@ -8,12 +8,16 @@ namespace EnemySpace
     {
         private string type;
         private float hp;
+        public float CurrentHP { get; private set; }
         private float speed;
         private float runSpeed;
         Vector3 homePoint; //стартовая позиция для генерации зоны патрулирования
         float patrolDistance; //радиус зоны патрулирования
         float chasingTime;
         float rangeDistance;
+        float rangeDamage;
+        float rangeAccuracy;
+        float shootSpeed;
         float meleeDistance;
 
         float timer = 0f;
@@ -53,8 +57,7 @@ namespace EnemySpace
         EnemyIdleController Idle;
         EnemyComingHome ComingHome;
         EnemyFightController Fight;
-        EnemyRangeAttack RangeAttack;
-        EnemyMeleeAttack MeleeAttack;
+        EnemyHurt Hurt;
         #endregion
 
         /// <summary>
@@ -62,22 +65,29 @@ namespace EnemySpace
         /// </summary>
         #region Cache
         MeshRenderer mesh;
+        MeshRenderer headMesh;
         Transform enemyTransform;
+        MeshRenderer gun;
+        MeshRenderer knife;
+        Transform gunBarrelEnd;
         NavMeshAgent agent;
         Rigidbody rb;
         CapsuleCollider enemyBorder;
         SphereCollider enemyView;
+        LineRenderer shootLine;
         GameObject player;//игрок
         #endregion
 
-        public EnemyController(Transform enemyTransform, NavMeshAgent agent, MeshRenderer mesh, Rigidbody rb, CapsuleCollider enemyBorder, SphereCollider enemyView, EnemySpecifications spec, Vector3 homePoint, GameObject player)
+        public EnemyController(Transform enemyTransform, NavMeshAgent agent, MeshRenderer mesh, MeshRenderer headMesh, MeshRenderer gun, MeshRenderer knife, Transform gunBarrelEnd, Rigidbody rb, CapsuleCollider enemyBorder, SphereCollider enemyView, LineRenderer shootLine, EnemySpecifications spec, Vector3 homePoint, GameObject player)
         {
             this.enemyTransform = enemyTransform;
             this.agent = agent;
             this.mesh = mesh;
+            this.headMesh = headMesh;
             this.enemyBorder = enemyBorder;
             this.enemyView = enemyView;
             this.rb = rb;
+            this.shootLine = shootLine;
             this.hp = spec.HP;
             this.speed = spec.Speed;
             this.runSpeed = spec.RunSpeed;
@@ -87,7 +97,13 @@ namespace EnemySpace
             this.player = player;
             this.type = spec.Type;
             this.rangeDistance = spec.RangeDistance;
+            this.rangeDamage = spec.RangeDamage;
+            this.rangeAccuracy = spec.RangeAccuracy;
+            this.shootSpeed = spec.ShootSpeed;
             this.meleeDistance = spec.MeleeDistance;
+            this.gun = gun;
+            this.knife = knife;
+            this.gunBarrelEnd = gunBarrelEnd;
         }
 
         public void EnemyControllerAwake()
@@ -98,6 +114,8 @@ namespace EnemySpace
             inChase = false;
             inFight = false;
             comingHome = false;
+
+            CurrentHP = hp;
             
             RouteGenerator = new RouteCompile();
             Dying = new EnemyDie(enemyTransform);
@@ -113,16 +131,15 @@ namespace EnemySpace
             Patroling = new EnemyPatrolController(Move, enemyTransform);
             Idle = new EnemyIdleController();
             ComingHome = new EnemyComingHome(Move, enemyTransform, homePoint);
-            RangeAttack = new EnemyRangeAttack();
-            MeleeAttack = new EnemyMeleeAttack();
             if(type == "Range")
             {
-                Fight = new EnemyFightController(MeleeAttack, RangeAttack, Move, enemyTransform, rangeDistance, meleeDistance, runSpeed);
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, rangeDistance, meleeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed);
             }
             if (type == "Melee")
             {
-                Fight = new EnemyFightController(MeleeAttack, RangeAttack, Move, enemyTransform, meleeDistance, rangeDistance, runSpeed);
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, meleeDistance, rangeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed);
             }
+            Hurt = new EnemyHurt(headMesh);
 
             ///<summary>
             ///подписка на события
@@ -171,7 +188,7 @@ namespace EnemySpace
                 }
                 else if (inFight)
                 {
-                    Fight.Fight(player);
+                    Fight.Fight(player, deltaTime);
                 }
                 else
                 {
@@ -194,6 +211,9 @@ namespace EnemySpace
             else
             {
                 Move.Stop();
+                headMesh.enabled = false;
+                gun.enabled = false;
+                knife.enabled = false;
                 enemyBorder.enabled = false;//выключаем коллайдер
                 rb.constraints = RigidbodyConstraints.FreezeAll;//замораживаем перемещения и повороты
                 Dying.Die(mesh, deltaTime);//запускаем событие смерти
@@ -236,13 +256,15 @@ namespace EnemySpace
         }
         private void TakeDamage(float dmg)
         {
-            if(hp > dmg)
+            if(CurrentHP > dmg)
             {
-                hp = hp - dmg;
+                CurrentHP = CurrentHP - dmg;
+                float lifePercent = CurrentHP / hp * 100;
+                Hurt.Hurt(lifePercent);
             }
             else
             {
-                hp = 0;
+                CurrentHP = 0;
                 alive = false;
             }
         }

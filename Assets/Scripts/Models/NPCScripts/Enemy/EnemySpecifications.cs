@@ -27,6 +27,12 @@ namespace EnemySpace
         [SerializeField] float rangeDistance = 0;
         public float RangeDistance { get { return rangeDistance; } }
 
+        [SerializeField] float rangeAccuracy = 0;
+        public float RangeAccuracy { get { return rangeAccuracy; } }
+
+        [SerializeField] float shootSpeed = 0;
+        public float ShootSpeed { get { return shootSpeed; } }
+
         [SerializeField] bool meleeAttack = false;
         public bool MeleeAttack { get { return meleeAttack; } }
 

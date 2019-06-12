@@ -31,7 +31,7 @@ namespace EnemySpace
         public void Rotate(Vector3 direction)
         {
             direction.y = 0f;
-            direction = direction.normalized * speed;
+            direction = direction.normalized;
             Quaternion newRotation = Quaternion.LookRotation(direction);
             rb.MoveRotation(newRotation);
         }

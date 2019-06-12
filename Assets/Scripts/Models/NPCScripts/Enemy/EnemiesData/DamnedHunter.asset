@@ -19,6 +19,8 @@ MonoBehaviour:
   rangeAttack: 1
   rangeDamage: 20
   rangeDistance: 25
+  rangeAccuracy: 2
+  shootSpeed: 1
   meleeAttack: 1
   meleeDamage: 5
   meleeDistance: 3

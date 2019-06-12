@@ -5,7 +5,7 @@ namespace EnemySpace
 {
     public class EnemyComingHome
     {
-        public delegate void ComingHomeContainer();
+        public delegate void ComingHomeContainer(string unitName);
         public static event ComingHomeContainer ComingHomeEvent;
 
         EnemyMove move;
@@ -25,7 +25,7 @@ namespace EnemySpace
             move.Move(homePoint);
             if(distance < 2f)
             {
-                ComingHomeEvent();
+                ComingHomeEvent(enemyTransform.name);
             }
         }
     }

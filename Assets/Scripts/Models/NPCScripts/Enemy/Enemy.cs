@@ -11,9 +11,9 @@ namespace EnemySpace
     [RequireComponent(typeof(SphereCollider))]
     public class Enemy : MonoBehaviour, ISetDamage
     {
-        public delegate void SeeEnemy();
+        public delegate void SeeEnemy(string unitName);
         public static event SeeEnemy SeeEvent;
-        public delegate void TakeDamage(float dmg);
+        public delegate void TakeDamage(float dmg, string unitName);
         public static event TakeDamage DamageEvent;
 
         EnemyController controller;
@@ -23,6 +23,7 @@ namespace EnemySpace
         MeshRenderer gun;
         MeshRenderer knife;
         Transform gunBarrelEnd;
+        AudioSource gunShotSound;
         MeshRenderer mesh;
         MeshRenderer headMesh;
         NavMeshAgent agent;
@@ -41,6 +42,7 @@ namespace EnemySpace
             knife = _transform.GetChild(3).GetComponent<MeshRenderer>();
             knife.enabled = false;
             gunBarrelEnd = _transform.GetChild(2);
+            gunShotSound = gunBarrelEnd.GetComponent<AudioSource>();
             headMesh.material.color = new Color(1, 0.9058824f, 0.6745098f, 1);
             agent = GetComponent<NavMeshAgent>();
             rb = GetComponent<Rigidbody>();
@@ -49,7 +51,7 @@ namespace EnemySpace
             shootLine = GetComponentInChildren<LineRenderer>();
             player = GameObject.FindGameObjectWithTag("Player");
             enemyView.radius = specification.ViewDistance;
-            controller = new EnemyController(_transform, agent, mesh, headMesh, gun, knife, gunBarrelEnd, rb, enemyBorder, enemyView, shootLine, specification, _transform.position, player);
+            controller = new EnemyController(_transform, agent, mesh, headMesh, gun, knife, gunBarrelEnd, rb, enemyBorder, enemyView, shootLine, specification, _transform.position, player, gunShotSound);
             controller.EnemyControllerAwake();
         }
         public void EnemyUpdate(float deltaTime)
@@ -61,14 +63,14 @@ namespace EnemySpace
         {
             if(other.gameObject == player)
             {
-                SeeEvent();
+                SeeEvent(_transform.name);
             }
             
         }
 
         public void ApplyDamage(float damage)
         {
-            DamageEvent(damage);
+            DamageEvent(damage, _transform.name);
         }
     }
 }

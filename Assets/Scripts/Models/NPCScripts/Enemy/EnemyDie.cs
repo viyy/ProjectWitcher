@@ -8,7 +8,7 @@ namespace EnemySpace
 {
     public class EnemyDie
     {
-        public delegate void DieContainer();
+        public delegate void DieContainer(string unitName);
         public static DieContainer DieEvent;
 
         float timer;
@@ -51,7 +51,7 @@ namespace EnemySpace
             else
             {
                 Debug.Log("invis");
-                DieEvent();
+                DieEvent(enemyTransform.name);
                 animStarted = false;
             }
             //if (invisibleSwitch < 255)

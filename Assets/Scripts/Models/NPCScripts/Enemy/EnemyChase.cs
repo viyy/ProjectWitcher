@@ -5,7 +5,7 @@ namespace EnemySpace
 {
     public class EnemyChase
     {
-        public delegate void ChaseContainer();
+        public delegate void ChaseContainer(string unityName);
         public static event ChaseContainer ChaseEvent;
         public static event ChaseContainer AttackSwitchEvent;
 
@@ -45,7 +45,7 @@ namespace EnemySpace
             }
             if(distance < priorityDistance)
             {
-                AttackSwitchEvent();
+                AttackSwitchEvent(enemyTransform.name);
             }
         }
 
@@ -54,7 +54,7 @@ namespace EnemySpace
         /// </summary>
         public void StopChase()
         {
-            ChaseEvent();
+            ChaseEvent(enemyTransform.name);
         }
     }
 }

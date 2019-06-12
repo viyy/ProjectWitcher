@@ -6,20 +6,23 @@ using EnemySpace;
 public class UnitManager : MonoBehaviour
 {
     int id;
-    private List<Enemy> enemyPull;
+    float timer;
+    private Dictionary<string, Enemy> enemyPull;
+
     void Awake()
     {
         CreatePull();
-        foreach(Enemy a in enemyPull)
+        foreach(Enemy a in enemyPull.Values)
         {
             a.EnemyAwake();
         }
+        EnemyDie.DieEvent += DeactivateUnit;
     }
 
     void FixedUpdate()
     {
         var deltaTime = Time.deltaTime;
-        foreach (Enemy a in enemyPull)
+        foreach (Enemy a in enemyPull.Values)
         {
             a.EnemyUpdate(deltaTime);
         }
@@ -28,18 +31,18 @@ public class UnitManager : MonoBehaviour
     private void CreatePull()
     {
         id = 1;
-        enemyPull = new List<Enemy>();
+        enemyPull = new Dictionary<string, Enemy>();
         Enemy[] startEnemies = GameObject.FindObjectsOfType<Enemy>();
         foreach(Enemy a in startEnemies)
         {
-            enemyPull.Add(a);
             a.name = "Проклятый охотник" + id;
+            enemyPull.Add(a.name, a);
             id++;
         }
     }
 
-    private void DestroyUnit(Enemy dead)
+    private void DeactivateUnit(string unitName)
     {
-        Destroy(dead.gameObject);
+        enemyPull[unitName].gameObject.SetActive(false);
     }
 }

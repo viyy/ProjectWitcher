@@ -23,6 +23,7 @@ MonoBehaviour:
   shootSpeed: 1
   meleeAttack: 1
   meleeDamage: 5
+  hitSpeed: 3
   meleeDistance: 3
   viewDistance: 30
   patrolDistance: 50

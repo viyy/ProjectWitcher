@@ -7,13 +7,19 @@ namespace EnemySpace
 {
     public class EnemyIdleController
     {
-        public delegate void IdleWaiter();
+        public delegate void IdleWaiter(string unitName);
         public static IdleWaiter IdleEvent;
 
+        Transform enemyTransform;
         float idleTime;
         float timer;
         bool animStarted = false;
         Animation anim;
+
+        public EnemyIdleController(Transform enemyTransform)
+        {
+            this.enemyTransform = enemyTransform;
+        }
 
         public void Idle()
         {
@@ -30,7 +36,7 @@ namespace EnemySpace
             }
             else
             {
-                IdleEvent();
+                IdleEvent(enemyTransform.name);
                 animStarted = false;
             }
         }

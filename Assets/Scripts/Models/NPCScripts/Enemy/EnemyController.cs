@@ -19,6 +19,8 @@ namespace EnemySpace
         float rangeAccuracy;
         float shootSpeed;
         float meleeDistance;
+        float meleeDamage;
+        float hitSpeed;
 
         float timer = 0f;
 
@@ -75,10 +77,11 @@ namespace EnemySpace
         CapsuleCollider enemyBorder;
         SphereCollider enemyView;
         LineRenderer shootLine;
+        AudioSource gunShotSound;
         GameObject player;//игрок
         #endregion
 
-        public EnemyController(Transform enemyTransform, NavMeshAgent agent, MeshRenderer mesh, MeshRenderer headMesh, MeshRenderer gun, MeshRenderer knife, Transform gunBarrelEnd, Rigidbody rb, CapsuleCollider enemyBorder, SphereCollider enemyView, LineRenderer shootLine, EnemySpecifications spec, Vector3 homePoint, GameObject player)
+        public EnemyController(Transform enemyTransform, NavMeshAgent agent, MeshRenderer mesh, MeshRenderer headMesh, MeshRenderer gun, MeshRenderer knife, Transform gunBarrelEnd, Rigidbody rb, CapsuleCollider enemyBorder, SphereCollider enemyView, LineRenderer shootLine, EnemySpecifications spec, Vector3 homePoint, GameObject player, AudioSource gunShotSound)
         {
             this.enemyTransform = enemyTransform;
             this.agent = agent;
@@ -101,9 +104,12 @@ namespace EnemySpace
             this.rangeAccuracy = spec.RangeAccuracy;
             this.shootSpeed = spec.ShootSpeed;
             this.meleeDistance = spec.MeleeDistance;
+            this.meleeDamage = spec.MeleeDamage;
+            this.hitSpeed = spec.HitSpeed;
             this.gun = gun;
             this.knife = knife;
             this.gunBarrelEnd = gunBarrelEnd;
+            this.gunShotSound = gunShotSound;
         }
 
         public void EnemyControllerAwake()
@@ -129,15 +135,15 @@ namespace EnemySpace
                 Chasing = new EnemyChase(Move, enemyTransform, runSpeed, chasingTime, meleeDistance);
             }           
             Patroling = new EnemyPatrolController(Move, enemyTransform);
-            Idle = new EnemyIdleController();
+            Idle = new EnemyIdleController(enemyTransform);
             ComingHome = new EnemyComingHome(Move, enemyTransform, homePoint);
             if(type == "Range")
             {
-                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, rangeDistance, meleeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed);
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, rangeDistance, meleeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed, meleeDamage, hitSpeed,  gunShotSound);
             }
             if (type == "Melee")
             {
-                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, meleeDistance, rangeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed);
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, meleeDistance, rangeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed, meleeDamage, hitSpeed, gunShotSound);
             }
             Hurt = new EnemyHurt(headMesh);
 
@@ -147,10 +153,11 @@ namespace EnemySpace
             EnemyPatrolController.PatrolEvent += PatrolWaiter;
             EnemyIdleController.IdleEvent += IdleWaiter;
             EnemyChase.ChaseEvent += FinishChase;
-            EnemyChase.AttackSwitchEvent += AttackMode;
+            EnemyChase.AttackSwitchEvent += AttackModeOn;
             Enemy.SeeEvent += StartChase;
             Enemy.DamageEvent += TakeDamage;
             EnemyComingHome.ComingHomeEvent += AtHome;
+            EnemyFightController.AttackToChaseEvent += AttackModeOff;
 
         }
 
@@ -225,47 +232,76 @@ namespace EnemySpace
         /// </summary>
         /// <param name="condition"></param>
         #region Subscribers
-        private void FinishChase()
+        private void FinishChase(string unitName)
         {
-            inChase = false;
-            comingHome = true;
-            timer = 0f;
-        }
-        private void AtHome()
-        {
-            comingHome = false;
-        }
-        private void AttackMode()
-        {
-            inFight = true;
-            inChase = false;
-        }
-        private void PatrolWaiter()
-        {
-            onPatrol = false;
-        }
-        private void IdleWaiter()
-        {
-            onIdle = false;
-        }
-        private void StartChase()
-        {
-            inChase = true;
-            onIdle = false;
-            onPatrol = false;
-        }
-        private void TakeDamage(float dmg)
-        {
-            if(CurrentHP > dmg)
+            if(enemyTransform.name == unitName)
             {
-                CurrentHP = CurrentHP - dmg;
-                float lifePercent = CurrentHP / hp * 100;
-                Hurt.Hurt(lifePercent);
+                inChase = false;
+                comingHome = true;
+                timer = 0f;
             }
-            else
+        }
+        private void AtHome(string unitName)
+        {
+            if(enemyTransform.name == unitName)
             {
-                CurrentHP = 0;
-                alive = false;
+                comingHome = false;
+            }
+        }
+        private void AttackModeOn(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                inFight = true;
+                inChase = false;
+            }
+        }
+        private void AttackModeOff(string unitName)
+        {
+            if (enemyTransform.name == unitName)
+            {
+                inFight = false;
+                inChase = true;
+            }
+        }
+        private void PatrolWaiter(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                onPatrol = false;
+            }           
+        }
+        private void IdleWaiter(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                onIdle = false;
+            }
+        }
+        private void StartChase(string unitName)
+        {
+            if(unitName == enemyTransform.name)
+            {
+                inChase = true;
+                onIdle = false;
+                onPatrol = false;
+            }
+        }
+        private void TakeDamage(float dmg, string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                if (CurrentHP > dmg)
+                {
+                    CurrentHP = CurrentHP - dmg;
+                    float lifePercent = CurrentHP / hp * 100;
+                    Hurt.Hurt(lifePercent);
+                }
+                else
+                {
+                    CurrentHP = 0;
+                    alive = false;
+                }
             }
         }
         #endregion

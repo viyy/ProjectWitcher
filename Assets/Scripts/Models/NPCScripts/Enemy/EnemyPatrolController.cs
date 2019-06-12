@@ -7,7 +7,7 @@ namespace EnemySpace
     /// </summary>
     public class EnemyPatrolController
     {
-        public delegate void PatrolWaiter();
+        public delegate void PatrolWaiter(string unitName);
         public static event PatrolWaiter PatrolEvent;
 
         private Vector3 currentPoint;
@@ -37,7 +37,7 @@ namespace EnemySpace
             }
             else if (Distance() && count == route.Length - 1)
             {
-                PatrolEvent();
+                PatrolEvent(enemyTransform.name);
                 count = 0;
             }
             else if (!Distance())

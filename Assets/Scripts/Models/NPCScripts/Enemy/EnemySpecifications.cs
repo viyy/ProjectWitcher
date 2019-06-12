@@ -39,6 +39,9 @@ namespace EnemySpace
         [SerializeField] float meleeDamage = 0;
         public float MeleeDamage { get { return meleeDamage; } }
 
+        [SerializeField] float hitSpeed = 0;
+        public float HitSpeed { get { return hitSpeed; } }
+
         [SerializeField] float meleeDistance = 0;
         public float MeleeDistance { get { return meleeDistance; } }
 

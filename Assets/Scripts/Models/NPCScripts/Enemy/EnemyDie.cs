@@ -4,48 +4,61 @@ using UnityEngine.Animations;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyDie : MonoBehaviour
+namespace EnemySpace
 {
-    public delegate void DieContainer();
-    public static DieContainer DieEvent;
-
-    Animator dieAnim;
-    float invisibleSwitch;
-    Coroutine invis;//карутина для плавного изменения внешнего состояния врага
-
-    private void Awake()
+    public class EnemyDie
     {
-        invisibleSwitch = 0f;
-        //dieAnim = GetComponent<Animator>();
-    }
+        public delegate void DieContainer(string unitName);
+        public static DieContainer DieEvent;
 
-    IEnumerator Switch()
-    {
-        WaitForSeconds wait = new WaitForSeconds(1);
-        yield return wait;
-        invisibleSwitch = invisibleSwitch + 50;
-        
+        float timer;
+        float frameTimer;
+        float timeBetweenFrames = 0.05f;
+        float dyingTime = 0.5f;
+        bool animStarted = false;
+        Transform enemyTransform;
 
-    }
-
-    /// <summary>
-    /// Метод демонстрации смерти врага
-    /// </summary>
-    /// <param name="mesh"></param>
-    public void Die(MeshRenderer mesh)
-    {
-        mesh.material.color = Color.red;
-        //dieAnim.SetTrigger("Die");
-        if (invisibleSwitch < 255)
+        public EnemyDie(Transform local)
         {
-            mesh.material.color = new Color(255, invisibleSwitch, invisibleSwitch, 255);
-            transform.localScale += new Vector3(0.2f, -0.1f, 0.2f);
-            invis = StartCoroutine(Switch());
+            enemyTransform = local;
         }
-        else
+
+        /// <summary>
+        /// Метод демонстрации смерти врага
+        /// </summary>
+        /// <param name="mesh"></param>
+        public void Die(MeshRenderer mesh, float deltaTime)
         {
-            Debug.Log("invis");
-            DieEvent();
+            if (!animStarted)
+            {
+                animStarted = true;
+                timer = 0f;
+                mesh.material.color = Color.red;
+            }
+            else if (animStarted && timer < dyingTime)
+            {
+                if (frameTimer < timeBetweenFrames)
+                {
+                    frameTimer += deltaTime;
+                }
+                else
+                {
+                    frameTimer = 0f;
+                    timer += deltaTime;
+                    enemyTransform.localScale += new Vector3(0.2f, -0.1f, 0.2f);
+                }
+            }
+            else
+            {
+                Debug.Log("invis");
+                DieEvent(enemyTransform.name);
+                animStarted = false;
+            }
+            //if (invisibleSwitch < 255)
+            //{
+            //    mesh.material.color = new Color(255, invisibleSwitch, invisibleSwitch, 255);
+
+            //}
         }
     }
 }

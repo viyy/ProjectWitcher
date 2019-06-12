@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Models;
 
 namespace Assets.Scripts.Models
 {
@@ -17,6 +18,11 @@ namespace Assets.Scripts.Models
         // Реген рейт хп
         public float healthRegenerationRate = 3;
 
+        private ParticleSystem bloodSplash;
+        private void Awake()
+        {
+            bloodSplash = GameObject.FindGameObjectWithTag("Player").GetComponent<ParticleSystem>();
+        }
         
 
         // Получение урона
@@ -24,6 +30,8 @@ namespace Assets.Scripts.Models
         {
             Debug.Log($"I was hitted for {damage} damage");
             health -= damage;
+            bloodSplash.Play();
+            
         }
 
         

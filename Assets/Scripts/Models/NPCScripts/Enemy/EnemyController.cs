@@ -1,176 +1,310 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(NPCPatrolController))]
-[RequireComponent(typeof(NPCIdleController))]
-[RequireComponent(typeof(RouteCompile))]
-[RequireComponent(typeof(NPCMove))]
-[RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(EnemyChase))]
-[RequireComponent(typeof(EnemyDie))]
-public class EnemyController : MonoBehaviour, ISetDamage
+namespace EnemySpace
 {
-    float hp;
-    bool alive; //жив ли враг
-    bool onPatrol; //Находится ли enemy в патруле
-    bool inChase; // Взаимодействует ли с ним игрок
-    bool onIdle; // Бездействует ли enemy
-    Vector3 startPosition; //стартовая позиция для генерации зоны патрулирования
-    public float patrolRange = 15f; //радиус зоны патрулирования
-    Vector3[] route; //маршрут точек для патруля
-    int patrolChance = 5;//шанс выбора режима патрулирования
-    int idleChance = 5;//шанс выбора режима бездействия
-    GameObject player;//игрок
-
-    MeshRenderer mesh;
-
-    private void Awake()
+    public class EnemyController
     {
-        hp = 100;
-        alive = true;
-        onPatrol = false;
-        onIdle = false;
-        inChase = false;
-        startPosition = transform.position; //загружаем в стартовую позицию начальное положение врага
-        ///<summary>
-        ///подписка на события
-        /// </summary>
-        NPCPatrolController.PatrolEvent += PatrolWaiter;
-        NPCIdleController.IdleEvent += IdleWaiter;
-        EnemyChase.ChaseEvent += FinishChase;
-        EnemyDie.DieEvent += DestroyUnit;
-        ///<summary>
-        ///находим объект игрока
-        /// </summary>
-        player = GameObject.FindGameObjectWithTag("Player");
-        mesh = GetComponent<MeshRenderer>();
-    }
+        private string type;
+        private float hp;
+        public float CurrentHP { get; private set; }
+        private float speed;
+        private float runSpeed;
+        Vector3 homePoint; //стартовая позиция для генерации зоны патрулирования
+        float patrolDistance; //радиус зоны патрулирования
+        float chasingTime;
+        float rangeDistance;
+        float rangeDamage;
+        float rangeAccuracy;
+        float shootSpeed;
+        float meleeDistance;
+        float meleeDamage;
+        float hitSpeed;
 
-    private void FixedUpdate()
-    {
-        if (alive)
+        float timer = 0f;
+
+        /// <summary>
+        /// Состояния
+        /// </summary>
+        #region Conditions
+        bool alive; //жив ли враг
+        bool onPatrol; //Режим патрулирования
+        bool inChase; // Режим погони
+        bool onIdle; // Режим бездействия
+        bool inFight; //Режим сражения
+        bool comingHome;
+        #endregion
+
+
+        Vector3[] route; //маршрут точек для патруля   
+
+        /// <summary>
+                         /// Шансы выбора действия
+                         /// </summary>
+        #region Chances
+        int patrolChance = 5;//шанс выбора режима патрулирования
+        int idleChance = 5;//шанс выбора режима бездействия
+        #endregion
+
+        /// <summary>
+        /// Дополнительно подключаемые компоненты, не наследованные от монобеха
+        /// </summary>
+        #region Instance
+        RouteCompile RouteGenerator;
+        EnemyDie Dying;
+        EnemyMove Move;
+        EnemyChase Chasing;
+        EnemyPatrolController Patroling;
+        EnemyIdleController Idle;
+        EnemyComingHome ComingHome;
+        EnemyFightController Fight;
+        EnemyHurt Hurt;
+        #endregion
+
+        /// <summary>
+        /// Кэшированные компоненты
+        /// </summary>
+        #region Cache
+        MeshRenderer mesh;
+        MeshRenderer headMesh;
+        Transform enemyTransform;
+        MeshRenderer gun;
+        MeshRenderer knife;
+        Transform gunBarrelEnd;
+        NavMeshAgent agent;
+        Rigidbody rb;
+        CapsuleCollider enemyBorder;
+        SphereCollider enemyView;
+        LineRenderer shootLine;
+        AudioSource gunShotSound;
+        GameObject player;//игрок
+        #endregion
+
+        public EnemyController(Transform enemyTransform, NavMeshAgent agent, MeshRenderer mesh, MeshRenderer headMesh, MeshRenderer gun, MeshRenderer knife, Transform gunBarrelEnd, Rigidbody rb, CapsuleCollider enemyBorder, SphereCollider enemyView, LineRenderer shootLine, EnemySpecifications spec, Vector3 homePoint, GameObject player, AudioSource gunShotSound)
         {
-            ///<summary>
-            ///Проверка состояния деятельности врага
-            /// </summary>
-            if (inChase)
-            {
-                DisableAll();
-                GetComponent<EnemyChase>().Chase(startPosition, patrolRange, player);
-                Debug.Log("Chasing");
-            }
-            else if (onPatrol)
-            {
-                GetComponent<NPCPatrolController>().Patrol(route);
-            }
-            else if (onIdle)
-            {
+            this.enemyTransform = enemyTransform;
+            this.agent = agent;
+            this.mesh = mesh;
+            this.headMesh = headMesh;
+            this.enemyBorder = enemyBorder;
+            this.enemyView = enemyView;
+            this.rb = rb;
+            this.shootLine = shootLine;
+            this.hp = spec.HP;
+            this.speed = spec.Speed;
+            this.runSpeed = spec.RunSpeed;
+            this.chasingTime = spec.ChasingTime;
+            this.homePoint = homePoint;
+            this.patrolDistance = spec.PatrolDistance;
+            this.player = player;
+            this.type = spec.Type;
+            this.rangeDistance = spec.RangeDistance;
+            this.rangeDamage = spec.RangeDamage;
+            this.rangeAccuracy = spec.RangeAccuracy;
+            this.shootSpeed = spec.ShootSpeed;
+            this.meleeDistance = spec.MeleeDistance;
+            this.meleeDamage = spec.MeleeDamage;
+            this.hitSpeed = spec.HitSpeed;
+            this.gun = gun;
+            this.knife = knife;
+            this.gunBarrelEnd = gunBarrelEnd;
+            this.gunShotSound = gunShotSound;
+        }
 
-            }
-            else
+        public void EnemyControllerAwake()
+        {
+            alive = true;
+            onPatrol = false;
+            onIdle = false;
+            inChase = false;
+            inFight = false;
+            comingHome = false;
+
+            CurrentHP = hp;
+            
+            RouteGenerator = new RouteCompile();
+            Dying = new EnemyDie(enemyTransform);
+            Move = new EnemyMove(agent, speed, rb);
+            if(type == "Range")
             {
-                int choseAct = Random.Range(-patrolChance, idleChance);
-                if (choseAct < 0)
+                Chasing = new EnemyChase(Move, enemyTransform, runSpeed, chasingTime, rangeDistance);
+            }
+            else if(type == "Melee")
+            {
+                Chasing = new EnemyChase(Move, enemyTransform, runSpeed, chasingTime, meleeDistance);
+            }           
+            Patroling = new EnemyPatrolController(Move, enemyTransform);
+            Idle = new EnemyIdleController(enemyTransform);
+            ComingHome = new EnemyComingHome(Move, enemyTransform, homePoint);
+            if(type == "Range")
+            {
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, rangeDistance, meleeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed, meleeDamage, hitSpeed,  gunShotSound);
+            }
+            if (type == "Melee")
+            {
+                Fight = new EnemyFightController(Move, enemyTransform, gun, knife, gunBarrelEnd, shootLine, meleeDistance, rangeDistance, runSpeed, rangeDamage, rangeAccuracy, shootSpeed, meleeDamage, hitSpeed, gunShotSound);
+            }
+            Hurt = new EnemyHurt(headMesh);
+
+            ///<summary>
+            ///подписка на события
+            /// </summary>
+            EnemyPatrolController.PatrolEvent += PatrolWaiter;
+            EnemyIdleController.IdleEvent += IdleWaiter;
+            EnemyChase.ChaseEvent += FinishChase;
+            EnemyChase.AttackSwitchEvent += AttackModeOn;
+            Enemy.SeeEvent += StartChase;
+            Enemy.DamageEvent += TakeDamage;
+            EnemyComingHome.ComingHomeEvent += AtHome;
+            EnemyFightController.AttackToChaseEvent += AttackModeOff;
+
+        }
+
+        public void EnemyControllerUpdate(float deltaTime)
+        {
+            if (alive)
+            {
+                ///<summary>
+                ///Проверка состояния деятельности врага
+                /// </summary>
+                if (inChase)
                 {
-                    onPatrol = true;
-                    route = GetComponent<RouteCompile>().Compile(startPosition, patrolRange);
-                    patrolChance--;
-                    idleChance = 5;
+                    enemyView.enabled = false;
+                    Chasing.Chase(player, deltaTime);
+                    Debug.Log("Chasing");
+                }
+                else if (comingHome)
+                {
+                    Debug.Log("ComingHome");
+                    timer += deltaTime;
+                    ComingHome.ComingHome();
+                    if(timer > 3f && !enemyView.enabled)
+                    {
+                        Debug.Log("ViewEnabled");
+                        enemyView.enabled = true;
+                    }
+                }
+                else if (onPatrol)
+                {
+                    Patroling.Patrol(route);
+                }
+                else if (onIdle)
+                {
+                    Idle.Idle();
+                }
+                else if (inFight)
+                {
+                    Fight.Fight(player, deltaTime);
                 }
                 else
                 {
-                    onIdle = true;
-                    GetComponent<NPCIdleController>().Idle();
-                    idleChance--;
-                    patrolChance = 5;
+                    int choseAct = Random.Range(-patrolChance, idleChance);
+                    if (choseAct < 0)
+                    {
+                        onPatrol = true;
+                        route = RouteGenerator.Compile(homePoint, patrolDistance);
+                        patrolChance--;
+                        idleChance = 5;
+                    }
+                    else
+                    {
+                        onIdle = true;
+                        idleChance--;
+                        patrolChance = 5;
+                    }
+                }
+            }
+            else
+            {
+                Move.Stop();
+                headMesh.enabled = false;
+                gun.enabled = false;
+                knife.enabled = false;
+                enemyBorder.enabled = false;//выключаем коллайдер
+                rb.constraints = RigidbodyConstraints.FreezeAll;//замораживаем перемещения и повороты
+                Dying.Die(mesh, deltaTime);//запускаем событие смерти
+            }
+        }
+
+        /// <summary>
+        /// Методы подписывающиеся на события для отслеживания состояний
+        /// </summary>
+        /// <param name="condition"></param>
+        #region Subscribers
+        private void FinishChase(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                inChase = false;
+                comingHome = true;
+                timer = 0f;
+            }
+        }
+        private void AtHome(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                comingHome = false;
+            }
+        }
+        private void AttackModeOn(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                inFight = true;
+                inChase = false;
+            }
+        }
+        private void AttackModeOff(string unitName)
+        {
+            if (enemyTransform.name == unitName)
+            {
+                inFight = false;
+                inChase = true;
+            }
+        }
+        private void PatrolWaiter(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                onPatrol = false;
+            }           
+        }
+        private void IdleWaiter(string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                onIdle = false;
+            }
+        }
+        private void StartChase(string unitName)
+        {
+            if(unitName == enemyTransform.name)
+            {
+                inChase = true;
+                onIdle = false;
+                onPatrol = false;
+            }
+        }
+        private void TakeDamage(float dmg, string unitName)
+        {
+            if(enemyTransform.name == unitName)
+            {
+                if (CurrentHP > dmg)
+                {
+                    CurrentHP = CurrentHP - dmg;
+                    float lifePercent = CurrentHP / hp * 100;
+                    Hurt.Hurt(lifePercent);
+                }
+                else
+                {
+                    CurrentHP = 0;
+                    alive = false;
                 }
             }
         }
-        else
-        {
-            GetComponent<EnemyChase>().StopChase();//останавливаем погоню
-            GetComponent<CapsuleCollider>().enabled = false;//выключаем коллайдер
-            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;//замораживаем перемещения и повороты
-            GetComponent<EnemyDie>().Die(mesh);//запускаем событие смерти
-        }
-    }
+        #endregion
 
-    /// <summary>
-    /// Отключаем состояния бездействия и патрулирования для начала погони
-    /// </summary>
-    private void DisableAll()
-    {
-        onIdle = false;
-        onPatrol = false;
     }
-
-
-    /// <summary>
-    /// запускаем погоню, если игрок попал в зону триггера
-    /// </summary>
-    /// <param name="other"></param>
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            inChase = true;
-        }
-    }
-
-    /// <summary>
-    /// Убиваем врага, если он столкнулся с игроком
-    /// </summary>
-    /// <param name="collision"></param>
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject == player)
-        {
-            
-        }
-    }
-
-    public void ApplyDamage(float damage)
-    {
-        if(hp > damage)
-        {
-            hp = hp - damage;
-        }
-        else
-        {
-            hp = 0;
-            alive = false;
-        }
-        Debug.Log(hp);
-    }
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.gameObject == player)
-    //    {
-    //        inChase = false;
-    //    }
-    //}
-
-    /// <summary>
-    /// Методы подписывающиеся на события для отслеживания состояний
-    /// </summary>
-    /// <param name="condition"></param>
-    #region Subscribers
-    private void FinishChase()
-    {
-        inChase = false;
-    }
-    private void PatrolWaiter()
-    {
-        onPatrol = false;
-    }
-    private void IdleWaiter()
-    {
-        onIdle = false;
-    }
-    private void DestroyUnit()
-    {
-        Destroy(gameObject);
-    }
-    #endregion
-
 }

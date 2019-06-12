@@ -1,43 +1,60 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-public class EnemyChase : MonoBehaviour
+namespace EnemySpace
 {
-    public delegate void ChaseContainer();
-    public static event ChaseContainer ChaseEvent;
-
-    float speed = 8;
-
-    /// <summary>
-    /// Метод погони
-    /// На вход получает центр зоны патрулирования, ее радиус и объект погони
-    /// </summary>
-    /// <param name="center"></param>
-    /// <param name="range"></param>
-    /// <param name="aim"></param>
-    public void Chase(Vector3 center, float range, GameObject aim)
+    public class EnemyChase
     {
-        ///<summary>
-        ///определяем дистанцию от центра зоны
-        /// </summary>
-        float distance = Mathf.Sqrt(Mathf.Pow(center.x - transform.position.x, 2) + Mathf.Pow(center.y - transform.position.y, 2) + Mathf.Pow(center.z - transform.position.z, 2));
-        GetComponent<NPCMove>().Move(aim.transform.position, speed);
-        if(distance > range * 2f)
+        public delegate void ChaseContainer(string unityName);
+        public static event ChaseContainer ChaseEvent;
+        public static event ChaseContainer AttackSwitchEvent;
+
+        float runSpeed;
+        EnemyMove move;
+        Transform enemyTransform;
+        float timer = 0f;
+        float chasingTime;
+        float priorityDistance;
+
+        public EnemyChase(EnemyMove move, Transform enemyTransform, float runSpeed, float chasingTime, float priorityDistance)
         {
-            StopChase();
-            Debug.Log("StopChase: \n dist: " + distance);
-            Debug.Log("range: " + range);
-            Debug.Log("startPosition: " + center);
+            this.move = move;
+            this.enemyTransform = enemyTransform;
+            this.runSpeed = runSpeed;
+            this.chasingTime = chasingTime;
+            this.priorityDistance = priorityDistance;
         }
-    }
 
-    /// <summary>
-    /// Метод прекращения погони
-    /// </summary>
-    public void StopChase()
-    {
-        GetComponent<NPCMove>().Move(transform.position);
-        ChaseEvent();
+        /// <summary>
+        /// Метод погони
+        /// На вход получает центр зоны патрулирования, ее радиус и объект погони
+        /// </summary>
+        /// <param name="aim"></param>
+        public void Chase(GameObject aim, float deltaTime)
+        {
+            timer += deltaTime;
+            ///<summary>
+            ///определяем дистанцию от центра зоны
+            /// </summary>
+            float distance = Mathf.Sqrt(Mathf.Pow(aim.transform.position.x - enemyTransform.position.x, 2) + Mathf.Pow(aim.transform.position.y - enemyTransform.position.y, 2) + Mathf.Pow(aim.transform.position.z - enemyTransform.position.z, 2));
+            move.Move(aim.transform.position, runSpeed);
+            if (timer > chasingTime)
+            {
+                StopChase();
+                timer = 0f;
+            }
+            if(distance < priorityDistance)
+            {
+                AttackSwitchEvent(enemyTransform.name);
+            }
+        }
 
+        /// <summary>
+        /// Метод прекращения погони
+        /// </summary>
+        public void StopChase()
+        {
+            ChaseEvent(enemyTransform.name);
+        }
     }
 }

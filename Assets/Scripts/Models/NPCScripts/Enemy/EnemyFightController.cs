@@ -237,15 +237,20 @@ namespace EnemySpace
             gun.enabled = true;
             knife.enabled = false;
             Vector3 direction = RotateDirection(archrival);
-            Vector3 distancePoint = -enemyTransform.forward * switchDistance;
+            Vector3 delta = new Vector3(archrival.x - enemyTransform.position.x, archrival.y - enemyTransform.position.y, archrival.z - enemyTransform.position.z);
+            Vector3 distancePointDirection = new Vector3(enemyTransform.position.x - delta.x * priorityDistance, enemyTransform.position.y - delta.y, enemyTransform.position.z - delta.z * priorityDistance);
+            Vector3 distancePoint = new Vector3(distancePointDirection.x, distancePointDirection.y, distancePointDirection.z);
             move.Continue();
             move.Move(distancePoint, boostSpeed);
-            //enemyTransform.position = enemyTransform.Translate(distancePoint);
+            //enemyTransform.Translate(distancePoint);
             float distance = Mathf.Sqrt(Mathf.Pow(archrival.x - enemyTransform.position.x, 2) + Mathf.Pow(archrival.y - enemyTransform.position.y, 2) + Mathf.Pow(archrival.z - enemyTransform.position.z, 2));
             if (distance >= switchDistance)
             {
                 specialAbility = false;
                 meleeHitCount = 0;
+                move.Stop();
+                move.Rotate(RotateDirection(archrival));
+                Debug.LogError("FinishAbility");
             }
         }
     }

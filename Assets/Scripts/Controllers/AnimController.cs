@@ -15,6 +15,7 @@ public class AnimController : BaseController
     public bool defence { get; private set; }
     public bool normaAttack { get; private set; }
     public bool heavyAttack { get; private set; }
+    public bool aiming { get; private set; }
     public float horizontal { get; private set; }
     public float vertical { get; private set; }
    
@@ -107,6 +108,15 @@ public class AnimController : BaseController
         {
             _animator.SetBool(animationsParametorsModel.isDefence, false);
         }
+
+        if (aiming)
+        {
+            _animator.SetBool(animationsParametorsModel.isAiming, true);
+        }
+        else
+        {
+            _animator.SetBool(animationsParametorsModel.isAiming, false);
+        }
     }
 
     //Метод проверки состояний различных состояний игрока
@@ -120,5 +130,6 @@ public class AnimController : BaseController
         roll = StartScript.GetStartScript.staminaController.CanRoll;
         normaAttack = StartScript.GetStartScript.staminaController.CanNormalAttack;
         heavyAttack = StartScript.GetStartScript.staminaController.CanHeavyAttack;
+        aiming = StartScript.GetStartScript.inputController.Aim;
     }
 }

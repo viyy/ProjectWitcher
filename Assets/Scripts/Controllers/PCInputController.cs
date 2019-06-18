@@ -103,8 +103,8 @@ namespace Assets.Scripts.Controllers
             ForwardBackward = Input.GetAxis("Horizontal");
 
             LeftRight = Input.GetAxis("Vertical");
-            
-            Jump = Input.GetKeyDown(PCInputModel.JumpButton);
+
+            Jump = Input.GetButton("Jump");
 
             Run = Input.GetKey(PCInputModel.RunButton);
 

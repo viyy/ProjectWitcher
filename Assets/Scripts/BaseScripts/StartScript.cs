@@ -15,7 +15,7 @@ namespace Assets.Scripts.BaseScripts
 
         public CameraController cameraController { get; private set; }
 
-        public PCInputController inputController { get; private set; }
+        public InputController inputController { get; private set; }
 
         public MovementController movementController { get; private set; }
 
@@ -42,7 +42,7 @@ namespace Assets.Scripts.BaseScripts
             GameObject PlayerAnimator = GameObject.FindGameObjectWithTag("PlayerAnimator");
 
             //Создаем контроллеры
-            inputController = new PCInputController();
+            inputController = new InputController();
             cameraController = new CameraController(Camera.main.GetComponent<CameraModel>(), CameraCenter, Camera.main, inputController);
             movementController = new MovementController(Player.transform, Player.GetComponent<CharacterController>());
             staminaController = new StaminaController(ref Player.GetComponent<StaminaModel>().Stamina, Player.GetComponent<StaminaModel>(), inputController, movementController);

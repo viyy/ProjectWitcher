@@ -23,7 +23,7 @@ namespace Assets.Scripts.Controllers
         private Transform Camera;
 
         //Ccылка на контроллер ввода
-        PCInputController inputController;
+        InputController inputController;
 
         //Контроллер персонажа !!! Временное решение !!!
         protected CharacterController CharacterController;
@@ -141,6 +141,7 @@ namespace Assets.Scripts.Controllers
         private void GetInputs()
         {
             Speed = PlayerMovement.Speed;
+
             IsAiming = StartScript.GetStartScript.inputController.Aim;
 
             RotationY = StartScript.GetStartScript.cameraController.YRotation;
@@ -169,14 +170,6 @@ namespace Assets.Scripts.Controllers
             if(IsGrounded)
             {
                 Y = StartScript.GetStartScript.staminaController.CanJump ? PlayerMovement.JumpHeight : PlayerMovement.MinimumFall;
-                //if (StartScript.GetStartScript.staminaController.CanJump)
-                //{
-                //    Y = PlayerMovement.JumpHeight;
-                //}
-                //else
-                //{
-                //    Y = PlayerMovement.MinimumFall;
-                //}
             }
 
             //Если игрок не стоит на поверхности, то проверяем соприкасается ли коллайдер персонажа с коллайдером под ногами.

@@ -51,6 +51,8 @@ namespace Assets.Scripts.Controllers
         //Стартовое расстояние до камеры.
         private Vector3 StartCameraDistance;
 
+        private Vector3 CameraCenterPosition;
+
         //Флаг для наличия препятствий
         private bool CameraObstacle;
 
@@ -60,11 +62,14 @@ namespace Assets.Scripts.Controllers
         //Флаг для возвращение камеры в стандартное положение за спину персонажа
         private bool BackToStandartCameraProsition = false;
 
+        //Флаг для центрирования камеры.
+        private bool CameraCenter = false;
+
         //Луч для проверки препятствия перед камерой.
         private RaycastHit Ray;
 
         //Ccылка на контроллер ввода
-        PCInputController inputController;
+        InputController inputController;
 
         //Кватернион для вращения
         Quaternion Rotation;
@@ -84,13 +89,12 @@ namespace Assets.Scripts.Controllers
         /// <param name="CameraModel">Модель камеры</param>
         /// <param name="Player">Позиция игрока</param>
         /// <param name="Camera">Ссылка на MainCamera</param>
-        public CameraController(CameraModel CameraModel, Transform Player, UnityCamera Camera, PCInputController inputController)
+        public CameraController(CameraModel CameraModel, Transform Player, UnityCamera Camera, InputController inputController)
         {
             AimPosition = GameObject.FindGameObjectWithTag("AimPosition").transform;
 
             //Получаем модель для камеры.
             this.CameraModel = CameraModel;
-
             this.Player = Player;
             this.Camera = Camera;
 
@@ -109,39 +113,38 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public override void ControllerLateUpdate()
         {
+            //Получаем данные с клавиатуры и мыши.
             GetInputs();
 
             //Ограничиваем движение камеры по оси X
             RotationX = (IsAiming) ? Mathf.Clamp(RotationX, -45, 45) : Mathf.Clamp(RotationX, 0, 70);
             
             //Проверяем коллизию
-            if (!IsAiming)
+            if (IsAiming)
             {
-                CollisionCheck(Player.transform.position, Rotation);
-
-                if(!BackToStandartCameraProsition)
+                //Преобразуем угол Еулера в кватернион. Поворачиваем игрока в сторону мышью при прицеливании.
+                Rotation = Quaternion.Euler(RotationX, Player.eulerAngles.y, 0);
+            }
+            else
+            {
+                //Если не нужно возвращаться в стандартную позицию.
+                if (!BackToStandartCameraProsition)
                 {
                     //Преобразуем угол Еулера в кватернион.
                     Rotation = Quaternion.Euler(RotationX, RotationY, 0);
                 }
             }
-            else
-            {
-                //Преобразуем угол Еулера в кватернион.
-                Rotation = Quaternion.Euler(RotationX, Player.eulerAngles.y, 0);
-            }
-
-            //Получаем нужное положение для камеры
-            StandartCameraPosition = Player.transform.position - (Rotation * Offset);
 
             //Двигаем камеру
             CameraMove(Rotation);
 
-            //Задаем направление камеры, если игрок не прицеливается
+            //Задаем направление "объектива" камеры, если игрок не прицеливается
             if(!IsAiming)
             {
                 Camera.transform.LookAt(Player.transform);
             }
+
+            Debug.Log("Return: " + BackToStandartCameraProsition);
         }
 
         /// <summary>
@@ -156,6 +159,12 @@ namespace Assets.Scripts.Controllers
             //Получаем значения колесика мыши
             Zoom = inputController.Zoom;
 
+            //Получаем значения с кнопки центрирования камеры
+            if (inputController.CameraCenter)
+            {
+                CameraCenter = true;
+            }
+
             //Получаем значения движения мыши по оси X
             RotationX += inputController.RotationX * (CameraModel.AxisY_MouseSensivity * 2);
 
@@ -167,10 +176,12 @@ namespace Assets.Scripts.Controllers
             else
             {
                 RotationY = Camera.transform.eulerAngles.y;
-                
             }
-            
 
+            if(CameraCenter)
+            {
+                RotationY = Player.eulerAngles.y;
+            }
         }
 
         /// Метод для передвижения камеры
@@ -179,30 +190,89 @@ namespace Assets.Scripts.Controllers
         /// <param name="Rotation">Текущее вращение камеры</param>
         private void CameraMove(Quaternion Rotation)
         {
-            switch(CameraObstacle & !IsAiming)
+            switch (IsAiming)
             {
+                //Игрок в режиме прицеливания
                 case true:
 
-                    Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleCameraPosition, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
+                    Camera.transform.rotation = Player.transform.rotation * Quaternion.Euler(RotationX, 0, 0);
+                    Camera.transform.position = Vector3.Lerp(Camera.transform.position, AimPosition.position, CameraModel.CameraMoveSpeed * Time.deltaTime);
+                    BackToStandartCameraProsition = true;
                     
                     break;
 
                 case false:
                     
-                    if (!IsAiming)
+                    //Проверяем наличие препятствий без центрирования камеры
+                    if (!CameraCenter)
                     {
-                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, StandartCameraPosition, CameraModel.CameraReturnSpeed * Time.deltaTime);
-                        if(BackToStandartCameraProsition & Vector3.Distance(Camera.transform.position, StandartCameraPosition) < 0.2f)
+                        //Проверка коллизии.
+                        CollisionCheck(Player.transform.position, Rotation);
+
+                        switch(CameraObstacle)
                         {
-                            BackToStandartCameraProsition = false;
+                            case true:
+
+                                Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleCameraPosition, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
+
+                                if (BackToStandartCameraProsition & Vector3.Distance(Camera.transform.position, ObstacleCameraPosition) < 0.2f)
+                                {
+                                    BackToStandartCameraProsition = false;
+                                }
+
+                                break;
+
+                            case false:
+
+                                //Получаем нужное положение для камеры
+                                StandartCameraPosition = Player.transform.position - (Rotation * Offset);
+
+                                //Задаем нужное положение для камеры
+                                Camera.transform.position = Vector3.Lerp(Camera.transform.position, StandartCameraPosition, CameraModel.CameraReturnSpeed * Time.deltaTime);
+
+                                if (BackToStandartCameraProsition & Vector3.Distance(Camera.transform.position, StandartCameraPosition) < 0.2f)
+                                {
+                                    BackToStandartCameraProsition = false;
+                                }
+
+                                break;
                         }
                     }
 
-                    else
+                    //Центрирование камеры
+                    if (CameraCenter)
                     {
-                        Camera.transform.rotation = Player.transform.rotation *  Quaternion.Euler(RotationX, 0, 0);
-                        Camera.transform.position = Vector3.Lerp(Camera.transform.position, AimPosition.position, CameraModel.CameraReturnSpeed * Time.deltaTime);
-                        BackToStandartCameraProsition = true;
+                        //Проверка коллизии.
+                        CollisionCheck(Player.transform.position, Quaternion.Euler(RotationX, Player.eulerAngles.y, 0));
+
+                        switch (CameraObstacle)
+                        {
+                            case true:
+
+                                Camera.transform.position = Vector3.Lerp(Camera.transform.position, ObstacleCameraPosition, CameraModel.CameraObstacleAvoidSpeed * Time.deltaTime);
+
+                                if (Vector3.Distance(Camera.transform.position, ObstacleCameraPosition) < 0.2f)
+                                {
+                                    CameraCenter = false;
+                                }
+
+                                break;
+
+                            case false:
+
+                                StandartCameraPosition = Player.transform.position - (Quaternion.Euler(RotationX, Player.eulerAngles.y, 0) * Offset);
+
+                                //Задаем нужное положение для камеры
+                                Camera.transform.position = Vector3.Lerp(Camera.transform.position, StandartCameraPosition, CameraModel.CameraReturnSpeed * Time.deltaTime);
+
+                                if (Vector3.Distance(Camera.transform.position, StandartCameraPosition) < 0.2f)
+                                {
+                                    CameraCenter = false;
+                                }
+
+                                break;
+                        }
+
                     }
                     
                     break;

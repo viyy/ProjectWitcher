@@ -20,6 +20,8 @@ namespace Assets.Scripts.Models
 
         [SerializeField] public float CameraReturnSpeed = 10;
 
+        [SerializeField] public float CameraMoveSpeed = 5;
+
         [SerializeField] public LayerMask Mask;
     }
 }

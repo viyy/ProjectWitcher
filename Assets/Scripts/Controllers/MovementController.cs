@@ -23,7 +23,7 @@ namespace Assets.Scripts.Controllers
         private Transform Camera;
 
         //Ccылка на контроллер ввода
-        PCInputController inputController;
+        InputController inputController;
 
         //Контроллер персонажа !!! Временное решение !!!
         protected CharacterController CharacterController;

@@ -8,4 +8,6 @@ public class AnimationsParametorsModel
     public string isNormalAttack = "isNormalAttack";
     public string isHeavyAttack = "isHeavyAttack";
     public string isRolling = "isRolling";
+    public string isDefence = "isDefencing";
+    public string isAiming = "isZooming";
 }

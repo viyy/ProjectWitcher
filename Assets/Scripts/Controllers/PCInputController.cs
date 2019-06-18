@@ -30,6 +30,8 @@ namespace Assets.Scripts.Controllers
 
         public bool Roll { get; private set; }
 
+        public bool Defence { get; private set; }
+
         #endregion
 
         #region Мышь
@@ -117,6 +119,8 @@ namespace Assets.Scripts.Controllers
             Zoom = Input.GetAxis("Mouse ScrollWheel");
 
             Roll = Input.GetKeyDown(PCInputModel.RollButton);
+
+            Defence = Input.GetKey(PCInputModel.DefenceButton);
         }
     }
 }

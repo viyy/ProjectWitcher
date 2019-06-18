@@ -12,8 +12,10 @@ public class AnimController : BaseController
     public bool roll { get; private set; }
     public bool jump { get; private set; }
     public bool run { get; private set; }
+    public bool defence { get; private set; }
     public bool normaAttack { get; private set; }
     public bool heavyAttack { get; private set; }
+    public bool aiming { get; private set; }
     public float horizontal { get; private set; }
     public float vertical { get; private set; }
    
@@ -81,7 +83,6 @@ public class AnimController : BaseController
         if (normaAttack)
         {
             _animator.SetBool(animationsParametorsModel.isNormalAttack, true);
-            Debug.Log("NormalAttack");
         }
         else
         {
@@ -92,11 +93,29 @@ public class AnimController : BaseController
         if (heavyAttack)
         {
             _animator.SetBool(animationsParametorsModel.isHeavyAttack, true);
-            Debug.Log("HeavyAttack");
         }
         else
         {
             _animator.SetBool(animationsParametorsModel.isHeavyAttack, false);
+        }
+
+        if (defence)
+        {
+            _animator.SetBool(animationsParametorsModel.isDefence, true);
+            Debug.Log("Defence");
+        }
+        else
+        {
+            _animator.SetBool(animationsParametorsModel.isDefence, false);
+        }
+
+        if (aiming)
+        {
+            _animator.SetBool(animationsParametorsModel.isAiming, true);
+        }
+        else
+        {
+            _animator.SetBool(animationsParametorsModel.isAiming, false);
         }
     }
 
@@ -105,10 +124,12 @@ public class AnimController : BaseController
     {
         horizontal = StartScript.GetStartScript.inputController.ForwardBackward;
         vertical = StartScript.GetStartScript.inputController.LeftRight;
+        defence = StartScript.GetStartScript.inputController.Defence;
         jump = StartScript.GetStartScript.staminaController.CanJump;
         run = StartScript.GetStartScript.staminaController.CanRun;
         roll = StartScript.GetStartScript.staminaController.CanRoll;
         normaAttack = StartScript.GetStartScript.staminaController.CanNormalAttack;
         heavyAttack = StartScript.GetStartScript.staminaController.CanHeavyAttack;
+        aiming = StartScript.GetStartScript.inputController.Aim;
     }
 }

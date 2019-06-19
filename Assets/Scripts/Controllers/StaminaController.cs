@@ -66,7 +66,7 @@ namespace Assets.Scripts.Controllers
             RunPress = InputController.Run;
             JumpPress = InputController.Jump;
             RollPress = InputController.Roll;
-            NormalAttackPress = InputController.LeftClick;
+            NormalAttackPress = InputController.LeftClickUP;
             HeavyAttackPress = InputController.HeavyAttackClick;
             IsStanding = movementController.IsStanding;
             IsWalking = movementController.IsWalking;

@@ -38,7 +38,9 @@ namespace Assets.Scripts.Controllers
 
         public bool Aim { get; private set; }
 
-        public bool LeftClick { get; private set; }
+        public bool LeftClickDown { get; private set; }
+
+        public bool LeftClickUp { get; private set; }
 
         public bool HeavyAttackClick { get; private set; }
 
@@ -73,40 +75,14 @@ namespace Assets.Scripts.Controllers
         
         public override void ControllerUpdate()
         {
-            #region Проверка на Двойной клик ЛКМ
-
-            if (Input.GetMouseButtonUp((int)PCInputModel.LeftMouseButton))
-            {
-                isLeftClickUp = true;
-                countLeftClick++;                
-            }
-
-            if (isLeftClickUp)
-            {
-                countTimer += Time.deltaTime;
-                if(countTimer >= timeToDoubleLeftClick)
-                {
-                    countTimer = 0;
-                    isLeftClickUp = false;
-                    countLeftClick = 0;
-                    HeavyAttackClick = false;
-                }               
-            }
-
-            if (countLeftClick >= 2)
-            {
-                HeavyAttackClick = true;
-            }
-
-            #endregion
-
+           
             ForwardBackward = Input.GetAxis("Horizontal");
 
             LeftRight = Input.GetAxis("Vertical");
 
             Jump = Input.GetButton("Jump");
 
-            Run = Input.GetKey(PCInputModel.RunButton);
+            Run = Input.GetKey(PCInputModel.Sprint);
 
             RotationY = Input.GetAxis("Mouse X");
 
@@ -114,13 +90,48 @@ namespace Assets.Scripts.Controllers
 
             Aim = Input.GetMouseButton((int)PCInputModel.AimMouseButton);            
 
-            LeftClick = Input.GetMouseButtonDown((int)PCInputModel.LeftMouseButton);
+            LeftClickDown = Input.GetMouseButtonDown((int)PCInputModel.LeftMouseButton);
+
+            LeftClickUp = Input.GetMouseButtonUp((int)PCInputModel.LeftMouseButton);
 
             Zoom = Input.GetAxis("Mouse ScrollWheel");
 
-            Roll = Input.GetKeyDown(PCInputModel.RollButton);
+            Roll = Input.GetKeyDown(PCInputModel.Roll);
 
             Defence = Input.GetKey(PCInputModel.DefenceButton);
+
+            #region Проверка на зажатие левой кнопки мыши для Тяжелой Атаки
+
+
+
+            #endregion
+
+            #region Проверка на Двойной клик ЛКМ для тяжелой атаки
+
+            //if (Input.GetMouseButtonUp((int)PCInputModel.LeftMouseButton))
+            //{
+            //    isLeftClickUp = true;
+            //    countLeftClick++;
+            //}
+
+            //if (isLeftClickUp)
+            //{
+            //    countTimer += Time.deltaTime;
+            //    if (countTimer >= timeToDoubleLeftClick)
+            //    {
+            //        countTimer = 0;
+            //        isLeftClickUp = false;
+            //        countLeftClick = 0;
+            //        HeavyAttackClick = false;
+            //    }
+            //}
+
+            //if (countLeftClick >= 2)
+            //{
+            //    HeavyAttackClick = true;
+            //}
+
+            #endregion
         }
     }
 }

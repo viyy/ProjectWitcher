@@ -20,16 +20,6 @@ namespace Quests
         
         public List<QuestMarker> MapMarkers { get; }
 
-        public void Register(QuestTask record)
-        {
-            Tasks.Add(record);
-        }
-
-        public void Unregister(QuestTask record)
-        {
-            Tasks.Remove(record);
-        }
-
         public Quest(QuestDto dto)
         {
             Id = dto.Id;

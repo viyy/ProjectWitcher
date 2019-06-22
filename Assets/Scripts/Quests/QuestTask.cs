@@ -1,3 +1,6 @@
+using Events;
+using Events.Args;
+
 namespace Quests
 {
     public class QuestTask
@@ -12,8 +15,12 @@ namespace Quests
 
         public bool IsCompleted => CurrentAmount >= NeededAmount;
 
-        public void AddAmount(int amount) => CurrentAmount += amount;
-		
+        public void AddAmount(int amount)
+        {
+            CurrentAmount += amount;
+            EventManager.TriggerEvent(GameEventTypes.QuestTaskUpdated, new TaskUpdatedArgs(Description,CurrentAmount,NeededAmount));
+        }
+
         public string Description {get; private set;}
 
         public QuestTask(QuestTaskDto dto)

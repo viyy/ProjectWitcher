@@ -10,6 +10,7 @@ namespace Quests
 {
     public class QuestLogController : BaseController
     {
+        private readonly List<Quest> _quests;
         private readonly IQuestStorage _questStorage;
 
         public QuestLogController(IQuestStorage questStorage)
@@ -31,26 +32,32 @@ namespace Quests
         {
             if (!(args is IdArgs idArgs)) return;
             var t = _questStorage.GetQuestById(idArgs.Id);
-            if (t!=null)
+            if (t != null)
                 _quests.Add(t);
         }
 
-        private readonly List<Quest> _quests;
+        public List<Quest> GetByZone(int zoneId)
+        {
+            return _quests.FindAll(x => x.ZoneId == zoneId);
+        }
 
-        public List<Quest> GetByZone(int zoneId) => _quests.FindAll(x => x.ZoneId == zoneId);
-        public List<Quest> GetByTaskType(QuestTaskTypes type) => _quests.FindAll(x => x.Tasks.Any(y => y.Type == type));
+        public List<Quest> GetByTaskType(QuestTaskTypes type)
+        {
+            return _quests.FindAll(x => x.Tasks.Any(y => y.Type == type));
+        }
 
-        public List<Quest> GetTracked() => _quests.FindAll(x => x.IsTracked);
-        
-       public void QuestUpdate(QuestTaskTypes eventType, int targetId, int amount = 1)
+        public List<Quest> GetTracked()
+        {
+            return _quests.FindAll(x => x.IsTracked);
+        }
+
+        public void QuestUpdate(QuestTaskTypes eventType, int targetId, int amount = 1)
         {
             foreach (var quest in GetByTaskType(eventType))
+            foreach (var task in quest.Tasks)
             {
-                foreach (var task in quest.Tasks)
-                {
-                    if (task.Type!=eventType || task.TargetId!=targetId) continue;
-                    task.AddAmount(amount);
-                }
+                if (task.Type != eventType || task.TargetId != targetId) continue;
+                task.AddAmount(amount);
             }
         }
 
@@ -58,7 +65,6 @@ namespace Quests
         {
             if (!(args is IdArgs dieArgs)) return;
             QuestUpdate(QuestTaskTypes.KillNpc, dieArgs.Id);
-            
         }
 
         private void OnAreaEnter(EventArgs args)
@@ -69,7 +75,6 @@ namespace Quests
 
         public override void ControllerUpdate()
         {
-        
         }
     }
 }

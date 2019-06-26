@@ -7,21 +7,21 @@ namespace Quests
     {
         [SerializeField] private int _mapId;
 
+        [SerializeField] private float _x;
+
+        [SerializeField] private float _y;
+
         public int MapId
         {
             get => _mapId;
             set => _mapId = value;
         }
 
-        [SerializeField] private float _x;
-
         public float X
         {
             get => _x;
             set => _x = value;
         }
-
-        [SerializeField] private float _y;
 
         public float Y
         {

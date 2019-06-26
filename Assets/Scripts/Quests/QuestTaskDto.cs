@@ -5,6 +5,11 @@ namespace Quests
     [CreateAssetMenu(fileName = "-1", menuName = "Quest/QuestTask")]
     public class QuestTaskDto : ScriptableObject
     {
+        [SerializeField] private string _description;
+
+        [SerializeField] private int _neededAmount;
+
+        [SerializeField] private int _targetId;
         [SerializeField] private QuestTaskTypes _type;
 
         public QuestTaskTypes Type
@@ -13,23 +18,17 @@ namespace Quests
             set => _type = value;
         }
 
-        [SerializeField] private int _targetId;
-
         public int TargetId
         {
             get => _targetId;
             set => _targetId = value;
         }
 
-        [SerializeField] private int _neededAmount;
-
         public int NeededAmount
         {
             get => _neededAmount;
             set => _neededAmount = value;
         }
-
-        [SerializeField] private string _description;
 
         public string Description
         {
